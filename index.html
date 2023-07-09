@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Natalie Belford, Benjamin Brustad, Jasmine Hyler">
+
+<title>Missing Data and Imputation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Missing Data and Imputation</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Natalie Belford, Benjamin Brustad, Jasmine Hyler </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Invalid Date</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Missing data is ubiquitous in any dataset. Although alone it is not a problem, missing data becomes a problem when its analysis shows bias or lacks power. While the occurrence of missing data is immense, its discussion in many peer-reviewed journal articles is not so. Even more infrequent were the discussions on how best to accurately institute observations in the missing dataset. As <span class="citation" data-cites="ljlmw14">Little et al. (<a href="#ref-ljlmw14" role="doc-biblioref">2014</a>)</span> observed, there are areas of loss when it comes to missing data – bias, power, and recoverability.</p>
+<p>Missing data in experiments and analyses can lead to inaccurately distributed data and calculations, skewed visuals (such as histograms, line graphs, etc.), and allow for inaccurate conclusions to be rendered. Determining which method is best is another challenge entirely. The problem of missing data in research applications is vast. There is a significant need to best correct the missing data points in order to provide the most accurate and complete dataset from which to analyze the research and draw accurate conclusions. Researchers suggest using the most common form of missing data analysis, Multiple Imputation (MI) in addition to other novel suggested approaches.</p>
+<p>MI resolves the issue of “too small or too big” standard errors gathered from using traditional methods of addressing missing data. A large standard error occurs when statistical results are acquired with a lack of precision, whereas a small standard error occurs when statistical results are acquired with an overestimation of precision.</p>
+<p>As <span class="citation" data-cites="mhth19">Madley-Dowd et al. (<a href="#ref-mhth19" role="doc-biblioref">2019</a>)</span> noted, providing sufficient auxiliary variables can alleviate power degradation from missing data. They determined that standard error increased when the fraction of missing information (FMI) increased, while FMI decreased when auxiliary variables increased.</p>
+<p><span class="citation" data-cites="emmsmt21">Emmanuel et al. (<a href="#ref-emmsmt21" role="doc-biblioref">2021</a>)</span> discussed the concept of using machine learning to address missing data. Using machine learning, additional imputation methods to alleviate missing data include K Nearest Neighbor (KNN) and Support Vector Machine(SVM). KNN measures distances for each missing value and pulls the replacement value from the smallest distances. KNN still performs well even with large amounts of missing data, and in iterative versions, it has been shown to converge faster than many other methods, yet with a high computation time. SVM is similar, but rather than weighting each distance as with KMM, it aims to create a hyperplane that has the largest distance to data points <span class="citation" data-cites="emmsmt21">(<a href="#ref-emmsmt21" role="doc-biblioref">2021</a>)</span>. It should be noted that the KNN method outperformed the experiment’s implementation of a random forest decision tree for small missingness ratios.</p>
+<p>Many researchers argue that single imputation methods should be used only in randomized trials <span class="citation" data-cites="awlb21">(<a href="#ref-awlb21" role="doc-biblioref">Austin et al. 2021</a>)</span>.</p>
+</section>
+<section id="types-of-missing-data" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-missing-data">Types of Missing Data</h2>
+<p>Throughout the topic research, a common theme has immerged. Missing data is categorized into either one of three types: missing completely at random, missing at random, and missing not at random.</p>
+<p><span class="citation" data-cites="k13">Kang (<a href="#ref-k13" role="doc-biblioref">2013</a>)</span> introduces us to the three types of missing data as initially proposed by Rubin <span class="citation" data-cites="r76">(<a href="#ref-r76" role="doc-biblioref">1976</a>)</span>. <span class="citation" data-cites="pmckppp17">Pedersen et al. (<a href="#ref-pmckppp17" role="doc-biblioref">2017</a>)</span> discuss the thorough estimation value of using MI in data analysis along with providing the three-step method. Pedersen, et al. <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">2017</a>)</span> conclude the results of using MI are similar to using complete datasets thereby enhancing the credibility of the method’s robustness.</p>
+<p>Missing completely at random (MCAR) refers to the probability that missing data is either not related to a specific value that is supposed to be obtained or the set of obtained values. The data can also be missing due to equipment failure, samples lost in transit, or unsatisfactory samples <span class="citation" data-cites="k13">Kang (<a href="#ref-k13" role="doc-biblioref">2013</a>)</span>. MCAR data are unbiased and therefore an advantage due to its estimated parameters being objective and undeterred due to missing data. As a result, MCAR is the best-case option for missing data in an experiment. When Missing not at random (MCAR) occurs, no bias is observed, only power is affected resulting in standard error (SE) around the estimates being larger due to reduced sample size. Missing at random (MAR) refers to the probability that missing responses are dependent upon the set of observed responses, but not related to the specific values expected to be obtained given the history of the obtained variable prior to the experiment. This is the most realistic option for missing data. When Missing at random (MAR) occurs, the missing data is knowable and missingness is predictable, therefore, estimates can be determined; bias can be “recovered” [3].</p>
+<p>Missing not at random (MNAR) refers to any case of missing data that cannot be classified as either missing completely at random or missing at random. MNAR is the least desirable scenario of missing data. The only way to accurately obtain an unbiased observation of the data is to model the data and use the model to incorporate it into a more complex model to estimate the values [3]. When Missing not at random (MNAR) occurs, the subjects affect the variables. Subjects do not want to disclose accurate information for fear or shame, and therefore forego providing a data point altogether [1].</p>
+</section>
+<section id="types-of-missing-data-solutions" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-missing-data-solutions">Types of Missing Data Solutions</h2>
+<p>Kang (2013) attempts to provide solutions to fill in the missing data points. His research suggests the best solution to missing data is to be proactive to prevent it. When prevention fails to eliminate missing data, Kang (2013) offers several data analysis solutions to make the data more robust. The most common solution is complete case analysis, also stated as listwise analysis, with the aim to eliminate the missing data records altogether and analyze only the remaining whole data records.</p>
+<p>Meanwhile, <span class="citation" data-cites="ltclbghc21">Lee et al. (<a href="#ref-ltclbghc21" role="doc-biblioref">2021</a>)</span> deem the method beneficial for some use cases, but not sufficient for most analyses. Lee et al.&nbsp;(2021) introduce Treatment and Reporting of Missing data in Observational Studies (TARMOS), a novel framework alternative to MI, whose aim is to provide transparency and limit redundancies in substituted data. The framework notes the importance of using auxiliary variables to gather information from incomplete observations.</p>
+<p>In addition to using MI, Little, et al.&nbsp;(2013) recommended using full-information maximum likelihood to mitigate the issues of missing data [1]. Using the three discussed planned missing data designs - multiform questionnaire protocol, two-method planned missing design, and wave-missing longitudinal design – the user is able to better understand how to overcome missing data issues.</p>
+<p>It is essential to have quality datasets to avoid corrupted machine learning models. A derivative of MI is the Multivariate Imputation by Chained Equation (MICE) algorithm which assumes data is missing at random (MAR). The process uses multiple imputation methods to provide better results by considering the uncertainty of missing data. Khan and Hoque <span class="citation" data-cites="kh20">(<a href="#ref-kh20" role="doc-biblioref">2020</a>)</span> provide an alternative to MICE.</p>
+<p>Known as SICE, the new method improves upon the already existing Multivariate Imputation by Chained Equation (MICE) algorithm (found as a package in R), split into two variations to impute both categorical and numerical data. The method improves missing data by creating a hybrid of single and multiple imputation techniques. Using the respective variant, SICE-Categorical and SICE-Numeric, of the Single Center Imputation from Multiple Chained Equation (SICE) algorithm, the missing data values are corrected using a thorough approach to closely find a more accurate value to use instead, using predicted values imputed using the MI approach, by computing for the imputed values a mean or mode, depending on the data type, and replacing the original imputed value with the respective central measure. An added feature of using SICE in R is that it often had the lowest computation time for its data sets.</p>
+<p>Two main techniques of imputation exist – traditional and modern <span class="citation" data-cites="oap18">(<a href="#ref-oap18" role="doc-biblioref">Osman, Abu-Mahfouz, and Page 2018</a>)</span>. The traditional technique - single imputation, deletion, and mean imputation may be obsolete. However, Hot or Cold deck imputation (replacing missing data using similar data sets), and Regression imputation (replacing missing data with points along a regression) - may prove useful with many datasets. Furthermore, single imputation may lead to biased results and underestimation of error or variability.</p>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>The Multiple Imputation (MI) approach is used to correct the issue of imputing multiple times the missing values from the predictive distribution of the missing given observed data. “Next, the analysis model is fitted to each ‘complete’ data set and results combined using Rubin’s rules” [3]. Bias can be reduced and efficiency increased by using in the imputation step the auxiliary variables (predictive of missing values but not in the substantive model). The MI method is good but is not appropriate for handling all missing data records.</p>
+<p>There is a three-step process for conducting a statistical analysis of MI. The stages are 1) Selecting independent variables that may help impute variables with missing data, 2) Noting the chosen statistical method, estimating in each of the imputed datasets the association of interest, and 3) Combining using Rubin’s rules the association measures from each imputed dataset [4].</p>
+<p>Little et al.&nbsp;(2014) provide exceptional detail on how to alleviate missing data using full-information maximum likelihood and multiple imputations followed by a presentation of 3-form planned missing design to include multiform questionnaire protocols, 2-method measurement models, and wave-missing longitudinal designs [1].</p>
+<p>TARMOS consists of three main steps with a series of subsets within each step. The steps are as follows. Step 1: Plan the analysis, step 2: Conduct the preplanned analysis, step 3: Report the analysis [7]. The framework’s emphasis is on transparency. All expectations of the analysis and the research interests should be disclosed.</p>
+<p>Researchers tested their proposed SICE method using four datasets, a sample of 65,000 real health records from hospitals and diagnostic clinics in Bangladesh, and a public dataset each from UCI Machine Learning Repository, Department of Mathematics of ETH Zurich, and Kaggle. The data types assessed were binary, categorical, and numeric. Researchers tested SICE performance against that of 12 existing imputation methods. Binary and numeric data responded better to SICE than the opposing methods. When using SICE, F-measurement resulted in a 20% increase while error reduction resulted in an 11% increase; both factors showed improvement using SICE compared to the existing imputation methods. There was no significant time difference when running SICE compared to MICE [6].</p>
+<p>Using Multiple Imputation by Chained Equations (MICE), the multiple imputation is conducted by manipulating the imputed data and comparing it to the regression, repeating the process multiple times, (usually 5-20), to create a single data set. Most modern imputations will create 20-100 data sets. Then each of these data sets will be analyzed and compared, such that the MI estimate of any statistic is the average of the statistic across each imputed set. The variance of each statistic is based on the within-imputation variation and the between-imputation variation [8]. The variable that is to be analyzed must be included in the imputation model, even if there is no missing data, otherwise, it will often be biased towards null.</p>
+<p>One method proposed by Osman, Abu-Mahfouz, and Page (2018), which we deem computationally feasible for this project is multiple imputation. The methodology includes performing single imputation with multiple data sets, analyzing and computing the error of each set, and combining the data into a single, final data set [10].</p>
+<section id="statistical-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-modeling">Statistical Modeling</h3>
+</section>
+<section id="conlusion" class="level3">
+<h3 class="anchored" data-anchor-id="conlusion">Conlusion</h3>
+</section>
+</section>
+<section id="references" class="level2 unnumbered">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-awlb21" class="csl-entry" role="listitem">
+Austin, Peter C., Ian R. White, Douglas S. Lee, and Stef van Buuren. 2021. <span>“Missing Data in Clinical Research: A Tutorial on Multiple Imputation.”</span> <em>Canadian Journal of Cardiology</em> 37 (9): 1322–31. <a href="https://doi.org/10.1016/j.cjca.2020.11.010">https://doi.org/10.1016/j.cjca.2020.11.010</a>.
+</div>
+<div id="ref-emmsmt21" class="csl-entry" role="listitem">
+Emmanuel, T., T. Maupong, D. Mpoeleng, T. Semong, B. Mphago, and O. Tabona. 2021. <span>“A Survey on Missing Data in Machine Learning.”</span> <em>Journal of Big Data</em> 8 (1): 140. <a href="https://doi.org/10.1186/s40537-021-00516-9">https://doi.org/10.1186/s40537-021-00516-9</a>.
+</div>
+<div id="ref-k13" class="csl-entry" role="listitem">
+Kang, H. 2013. <span>“The Prevention and Handling of the Missing Data.”</span> <em>Korean Journal of Anesthesiology</em> 64 (5): po2. https://doi.org/<a href="https://doi.org/10.4097/kjae.2013.64.5.402">https://doi.org/10.4097/kjae.2013.64.5.402</a>.
+</div>
+<div id="ref-kh20" class="csl-entry" role="listitem">
+Khan, S. I., and A. S. M. L. Sice Hoque. 2020. <span>“An Improved Missing Data Imputation Technique.”</span> <em>J Big Data</em> 7: 37. <a href="https://doi.org/10.1186/s40537-020-00313-w">https://doi.org/10.1186/s40537-020-00313-w</a>.
+</div>
+<div id="ref-ltclbghc21" class="csl-entry" role="listitem">
+Lee, Katherine J., Kate M. Tilling, Rosie P. Cornish, Roderick J. A. Little, Melanie L. Bell, Els Goetghebeur, Joseph W. Hogan, and James R. Carpenter. 2021. <span>“Framework for the Treatment and Reporting of Missing Data in Observational Studies: The Treatment and Reporting of Missing Data in Observational Studies Framework.”</span> <em>Journal of Clinical Epidemiology</em> 134: 79–88. <a href="https://doi.org/10.1016/j.jclinepi.2021.01.008">https://doi.org/10.1016/j.jclinepi.2021.01.008</a>.
+</div>
+<div id="ref-ljlmw14" class="csl-entry" role="listitem">
+Little, T., T. Jorgensen, K. Lang, E. Moore, and E. Whitney. 2014. <span>“On the Joys of Missing Data.”</span> <em>Journal of Pediatric Psychology</em> 39 (2): 151–62. https://doi.org/<a href="https://doi.org/10.1093/jpepsy/jst048">https://doi.org/10.1093/jpepsy/jst048</a>.
+</div>
+<div id="ref-mhth19" class="csl-entry" role="listitem">
+Madley-Dowd, P., R. Hughes, K. Tilling, and J. Heron. 2019. <span>“The Proportion of Missing Data Should Not Be Used to Guide Decisions on Multiple Imputation.”</span> <em>JCE</em> 110: 63–73. <a href="https://doi.org/10.1016/j.jclinepi.2019.02.016">https://doi.org/10.1016/j.jclinepi.2019.02.016</a>.
+</div>
+<div id="ref-oap18" class="csl-entry" role="listitem">
+Osman, M. S., A. M. Abu-Mahfouz, and P. R. Page. 2018. <span>“A Survey on Data Imputation Techniques: Water Distribution System as a Use Case.”</span> <em>IEEE Access</em> 6: 63279–91. <a href="https://doi.org/10.1109/ACCESS.2018.2877269">https://doi.org/10.1109/ACCESS.2018.2877269</a>.
+</div>
+<div id="ref-pmckppp17" class="csl-entry" role="listitem">
+Pedersen, Alma B., Ellen M. Mikkelsen, Deirdre Cronin-Fenton, Nickolaj R. Kristensen, Tra My Pham, Lars Pedersen, and Irene Petersen. 2017. <span>“Missing Data and Multiple Imputation in Clinical Epidemiological Research,”</span> <em>Clinical Epidemiology</em> 9: 157–66. <a href="https://doi.org/10.2147/CLEP.S129785">https://doi.org/10.2147/CLEP.S129785</a>.
+</div>
+<div id="ref-r76" class="csl-entry" role="listitem">
+Rubin, Donald B. 1976. <span>“Inference and Missing Data.”</span> <em>Biometrika</em> 63 (3): 581–92. <a href="https://doi.org/10.1093/biomet/63.3.581">https://doi.org/10.1093/biomet/63.3.581</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
