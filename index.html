@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Natalie Belford, Benjamin Brustad, Jasmine Hyler">
-<meta name="dcterms.date" content="2023-07-16">
+<meta name="dcterms.date" content="2023-07-17">
 
 <title>Missing Data and Imputation</title>
 <style>
@@ -117,7 +117,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 16, 2023</p>
+      <p class="date">July 17, 2023</p>
     </div>
   </div>
   
@@ -129,26 +129,32 @@ div.csl-indent {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Missing data is ubiquitous in any dataset. Although alone it is not a problem, missing data becomes a problem when its analysis shows bias or lacks power. While the occurrence of missing data is immense, its discussion in many peer-reviewed journal articles is not so. Even more infrequent were the discussions on how best to accurately institute observations in the missing dataset. Some researchers have observed <span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a>)</span> , there are areas of loss when it comes to missing data – bias, power, and recoverability.</p>
+<p>Missing data is ubiquitous in any dataset. Although alone it is not a problem, missing data becomes a problem when its analysis shows bias or lacks power. While the occurrence of missing data is immense, its discussion in many peer-reviewed journal articles is not so. Even more infrequent were the discussions on how best to accurately institute observations in the missing dataset. Some researchers have observed, <span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a>)</span> there are areas of loss when it comes to missing data – bias, power, and recoverability.</p>
 <p>Missing data in experiments and analyses can lead to inaccurately distributed data and calculations, skewed visuals (such as histograms, line graphs, etc.), and allow for inaccurate conclusions to be rendered. Determining which method is best is another challenge entirely. The problem of missing data in research applications is vast. There is a significant need to best correct the missing data points in order to provide the most accurate and complete dataset from which to analyze the research and draw accurate conclusions. Researchers suggest using the most common form of missing data analysis, Multiple Imputation (MI) in addition to other novel suggested approaches.</p>
 <p>MI resolves the issue of “too small or too big” standard errors gathered from using traditional methods of addressing missing data. A large standard error occurs when statistical results are acquired with a lack of precision, whereas a small standard error occurs when statistical results are acquired with an overestimation of precision.</p>
-<p>As <span class="citation" data-cites="mhth19">(<a href="#ref-mhth19" role="doc-biblioref">Madley-Dowd et al. 2019</a>)</span> noted, providing sufficient auxiliary variables can alleviate power degradation from missing data. They determined that standard error increased when the fraction of missing information (FMI) increased, while FMI decreased when auxiliary variables increased.</p>
-<p><span class="citation" data-cites="emmsmt21">(<a href="#ref-emmsmt21" role="doc-biblioref">Emmanuel et al. 2021</a>)</span> discussed the concept of using machine learning to address missing data. Using machine learning, additional imputation methods to alleviate missing data include K Nearest Neighbor (KNN) and Support Vector Machine(SVM). KNN measures distances for each missing value and pulls the replacement value from the smallest distances. KNN still performs well even with large amounts of missing data, and in iterative versions, it has been shown to converge faster than many other methods, yet with a high computation time. SVM is similar, but rather than weighting each distance as with KMM, it aims to create a hyperplane that has the largest distance to data points <span class="citation" data-cites="emmsmt21">(<a href="#ref-emmsmt21" role="doc-biblioref">2021</a>)</span>. It should be noted that the KNN method outperformed the experiment’s implementation of a random forest decision tree for small missingness ratios.</p>
+<p>As others have noted,<span class="citation" data-cites="mhth19">(<a href="#ref-mhth19" role="doc-biblioref">Madley-Dowd et al. 2019</a>)</span> providing sufficient auxiliary variables can alleviate power degradation from missing data. They determined that standard error increased when the fraction of missing information (FMI) increased, while FMI decreased when auxiliary variables increased.</p>
+<p>There has also been discussion of the concept of using machine learning to address missing data<span class="citation" data-cites="emmsmt21">(<a href="#ref-emmsmt21" role="doc-biblioref">Emmanuel et al. 2021</a>)</span>. Using machine learning, additional imputation methods to alleviate missing data include K Nearest Neighbor (KNN) and Support Vector Machine(SVM). KNN measures distances for each missing value and pulls the replacement value from the smallest distances. KNN still performs well even with large amounts of missing data, and in iterative versions, it has been shown to converge faster than many other methods, yet with a high computation time. SVM is similar, but rather than weighting each distance as with KMM, it aims to create a hyperplane that has the largest distance to data points <span class="citation" data-cites="emmsmt21">(<a href="#ref-emmsmt21" role="doc-biblioref">2021</a>)</span>. It should be noted that the KNN method outperformed the experiment’s implementation of a random forest decision tree for small missingness ratios.</p>
 <p>Many researchers argue that single imputation methods should be used only in randomized trials <span class="citation" data-cites="awlb21">(<a href="#ref-awlb21" role="doc-biblioref">Austin et al. 2021</a>)</span>.</p>
 </section>
 <section id="types-of-missing-data" class="level2">
 <h2 class="anchored" data-anchor-id="types-of-missing-data">Types of Missing Data</h2>
 <p>Throughout the topic research, a common theme has immerged. Missing data is categorized into either one of three types: missing completely at random, missing at random, and missing not at random.</p>
-<p><span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span> introduces us to the three types of missing data as initially proposed by <span class="citation" data-cites="r76">(<a href="#ref-r76" role="doc-biblioref">Rubin 1976</a>)</span>. <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">Pedersen et al. 2017</a>)</span> discuss the thorough estimation value of using MI in data analysis along with providing the three-step method. <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">Pedersen et al. 2017</a>)</span> conclude the results of using MI are similar to using complete datasets thereby enhancing the credibility of the method’s robustness.</p>
-<p>Missing completely at random (MCAR) refers to the probability that missing data is either not related to a specific value that is supposed to be obtained or the set of obtained values. The data can also be missing due to equipment failure, samples lost in transit, or unsatisfactory samples <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">2013</a>)</span>. MCAR data are unbiased and therefore an advantage due to its estimated parameters being objective and undeterred due to missing data. As a result, MCAR is the best-case option for missing data in an experiment. When Missing not at random (MCAR) occurs, no bias is observed, only power is affected resulting in standard error (SE) around the estimates being larger due to reduced sample size. Missing at random (MAR) refers to the probability that missing responses are dependent upon the set of observed responses, but not related to the specific values expected to be obtained given the history of the obtained variable prior to the experiment. This is the most realistic option for missing data. When Missing at random (MAR) occurs, the missing data is knowable and missingness is predictable, therefore, estimates can be determined; bias can be “recovered” <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>.</p>
+<p>Kang <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span> introduces us to the three types of missing data as initially proposed by Rubin <span class="citation" data-cites="r76">(<a href="#ref-r76" role="doc-biblioref">Rubin 1976</a>)</span>. This was expanded upon <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">Pedersen et al. 2017</a>)</span> to discuss the thorough estimation value of using MI in data analysis along with providing the three-step method. They <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">Pedersen et al. 2017</a>)</span> conclude the results of using MI are similar to using complete datasets thereby enhancing the credibility of the method’s robustness.</p>
+<p>Missing completely at random (MCAR) refers to the probability that missing data is either not related to a specific value that is supposed to be obtained or the set of obtained values. The data can also be missing due to equipment failure, samples lost in transit, or unsatisfactory samples <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>. MCAR data are unbiased and therefore an advantage due to its estimated parameters being objective and undeterred due to missing data. As a result, MCAR is the best-case option for missing data in an experiment. When Missing not at random (MCAR) occurs, no bias is observed, only power is affected resulting in standard error (SE) around the estimates being larger due to reduced sample size. Missing at random (MAR) refers to the probability that missing responses are dependent upon the set of observed responses, but not related to the specific values expected to be obtained given the history of the obtained variable prior to the experiment. This is the most realistic option for missing data. When Missing at random (MAR) occurs, the missing data is knowable and missingness is predictable, therefore, estimates can be determined; bias can be “recovered” <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>.</p>
 <p>Missing not at random (MNAR) refers to any case of missing data that cannot be classified as either missing completely at random or missing at random. MNAR is the least desirable scenario of missing data. The only way to accurately obtain an unbiased observation of the data is to model the data and use the model to incorporate it into a more complex model to estimate the values <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>. When Missing not at random (MNAR) occurs, the subjects affect the variables. Subjects do not want to disclose accurate information for fear or shame, and therefore forego providing a data point altogether <span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a>)</span>.</p>
 </section>
 <section id="types-of-missing-data-solutions" class="level2">
 <h2 class="anchored" data-anchor-id="types-of-missing-data-solutions">Types of Missing Data Solutions</h2>
-<p><span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span> attempts to provide solutions to fill in the missing data points. His research suggests the best solution to missing data is to be proactive to prevent it. When prevention fails to eliminate missing data, Kang offers several data analysis solutions to make the data more robust. The most common solution is complete case analysis, also stated as listwise analysis, with the aim to eliminate the missing data records altogether and analyze only the remaining whole data records.</p>
+<p>Kang attempts to provide solutions to fill in the missing data points<span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span> . His research suggests the best solution to missing data is to be proactive to prevent it. When prevention fails to eliminate missing data, Kang offers several data analysis solutions to make the data more robust. The most common solution is complete case analysis, also stated as listwise analysis, with the aim to eliminate the missing data records altogether and analyze only the remaining whole data records.</p>
 <p>Meanwhile, <span class="citation" data-cites="ltclbghc21">(<a href="#ref-ltclbghc21" role="doc-biblioref">Lee et al. 2021</a>)</span> deem the method beneficial for some use cases, but not sufficient for most analyses. They introduce Treatment and Reporting of Missing data in Observational Studies (TARMOS), a novel framework alternative to MI, whose aim is to provide transparency and limit redundancies in substituted data. The framework notes the importance of using auxiliary variables to gather information from incomplete observations.</p>
 <p>In addition to using MI, Little, et al.&nbsp;recommended using full-information maximum likelihood to mitigate the issues of missing data <span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a>)</span>. Using the three discussed planned missing data designs - multiform questionnaire protocol, two-method planned missing design, and wave-missing longitudinal design – the user is able to better understand how to overcome missing data issues.</p>
-<p>It is essential to have quality datasets to avoid corrupted machine learning models. A derivative of MI is the Multivariate Imputation by Chained Equation (MICE) algorithm which assumes data is missing at random (MAR). The process uses multiple imputation methods to provide better results by considering the uncertainty of missing data. <span class="citation" data-cites="kh20">(<a href="#ref-kh20" role="doc-biblioref">Khan and Hoque 2020</a>)</span> provide an alternative to MICE.</p>
+<p>It is essential to have quality datasets to avoid corrupted machine learning models. A derivative of MI is the Multivariate Imputation by Chained Equation (MICE) algorithm which assumes data is missing at random (MAR). The process uses multiple imputation methods to provide better results by considering the uncertainty of missing data. Others<span class="citation" data-cites="kh20">(<a href="#ref-kh20" role="doc-biblioref">Khan and Hoque 2020</a>)</span> provide an alternative to MICE.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="MultiImputation.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Multiple Imputation Process</figcaption>
+</figure>
+</div>
 <p>Known as SICE, the new method improves upon the already existing Multivariate Imputation by Chained Equation (MICE) algorithm (found as a package in R), split into two variations to impute both categorical and numerical data. The method improves missing data by creating a hybrid of single and multiple imputation techniques. Using the respective variant, SICE-Categorical and SICE-Numeric, of the Single Center Imputation from Multiple Chained Equation (SICE) algorithm, the missing data values are corrected using a thorough approach to closely find a more accurate value to use instead, using predicted values imputed using the MI approach, by computing for the imputed values a mean or mode, depending on the data type, and replacing the original imputed value with the respective central measure. An added feature of using SICE in R is that it often had the lowest computation time for its data sets.</p>
 <p>Two main techniques of imputation exist – traditional and modern <span class="citation" data-cites="oap18">(<a href="#ref-oap18" role="doc-biblioref">Osman, Abu-Mahfouz, and Page 2018</a>)</span>. The traditional technique - single imputation, deletion, and mean imputation may be obsolete. However, Hot or Cold deck imputation (replacing missing data using similar data sets), and Regression imputation (replacing missing data with points along a regression) - may prove useful with many datasets. Furthermore, single imputation may lead to biased results and underestimation of error or variability.</p>
 </section>
@@ -159,71 +165,499 @@ div.csl-indent {
 <p>There is a three-step process for conducting a statistical analysis of MI. The stages are 1) Selecting independent variables that may help impute variables with missing data, 2) Noting the chosen statistical method, estimating in each of the imputed datasets the association of interest, and 3) Combining using Rubin’s rules the association measures from each imputed dataset <span class="citation" data-cites="r76">(<a href="#ref-r76" role="doc-biblioref">Rubin 1976</a>)</span>.</p>
 <p><span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a> )</span> provide exceptional detail on how to alleviate missing data using full-information maximum likelihood and multiple imputations followed by a presentation of 3-form planned missing design to include multiform questionnaire protocols, 2-method measurement models, and wave-missing longitudinal designs.</p>
 <p>TARMOS consists of three main steps with a series of subsets within each step. The steps are as follows. Step 1: Plan the analysis, step 2: Conduct the preplanned analysis, step 3: Report the analysis <span class="citation" data-cites="ltclbghc21">(<a href="#ref-ltclbghc21" role="doc-biblioref">Lee et al. 2021</a>)</span>. The framework’s emphasis is on transparency. All expectations of the analysis and the research interests should be disclosed.</p>
-<p>One method proposed by <span class="citation" data-cites="oap18">(<a href="#ref-oap18" role="doc-biblioref">Osman, Abu-Mahfouz, and Page 2018</a>)</span>, which we deem computationally feasible for this project is multiple imputation. The methodology includes performing single imputation with multiple data sets, analyzing and computing the error of each set, and combining the data into a single, final data set.</p>
+<p>One proposed method which we deem computationally feasible for this project is multiple imputation <span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a> )</span>. The methodology includes performing single imputation with multiple data sets, analyzing and computing the error of each set, and combining the data into a single, final data set.</p>
 <p>Researchers tested their proposed SICE method using four datasets, a sample of 65,000 real health records from hospitals and diagnostic clinics in Bangladesh, and a public dataset each from UCI Machine Learning Repository, Department of Mathematics of ETH Zurich, and Kaggle. The data types assessed were binary, categorical, and numeric. Researchers tested SICE performance against that of 12 existing imputation methods. Binary and numeric data responded better to SICE than the opposing methods. When using SICE, F-measurement resulted in a 20% increase while error reduction resulted in an 11% increase; both factors showed improvement using SICE compared to the existing imputation methods. There was no significant time difference when running SICE compared to MICE <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">Pedersen et al. 2017</a>)</span>.</p>
 <p>Using Multiple Imputation by Chained Equations (MICE), the multiple imputation is conducted by manipulating the imputed data and comparing it to the regression, repeating the process multiple times, (usually 5-20), to create a single data set. Most modern imputations will create 20-100 data sets. Then each of these data sets will be analyzed and compared, such that the MI estimate of any statistic is the average of the statistic across each imputed set. The variance of each statistic is based on the within-imputation variation and the between-imputation variation <span class="citation" data-cites="awlb21">(<a href="#ref-awlb21" role="doc-biblioref">Austin et al. 2021</a>)</span>. The variable that is to be analyzed must be included in the imputation model, even if there is no missing data, otherwise, it will often be biased towards null.</p>
 <p>For our analysis, we decided to use the R packages for predictive means matching, classification and regression trees, and lasso linear regression. Predictive means matching(PMM) is a hot deck method, which pools complete cases which are similar to the case we are trying to impute, and randomly chooses values from the pool of prospective donors to be imputed for the missing data. Classification and regression trees(CART) looks for predictors and cutoff points in the data, and splits data into trees along these points. Missing data is replaced very similarly to the PMM method, but data is chosen according to the tree of splitting points rather than regression. Lasso linear regression fits a linear regression using the missing columns as dependent and complete columns as predictors. Then a Bayesian linear model is defined, and imputations are drawn from the posterior predictive distribution.</p>
 <section id="analysis-and-results" class="level3">
 <h3 class="anchored" data-anchor-id="analysis-and-results">Analysis and Results</h3>
-<p>Prior to implementing the MICE method, we ran a missing map to get a count of which columns contain missing data and how many data points are missing. Below are the MICE code and results, and figure. Code:</p>
+<p>Prior to implementing the MICE method, we ran a missing map to get a count of which rows and columns contain missing data and how many data points are missing. As the following table and figures will show most of the columns contain their complete data set. We do, however, have three columns – Provisional Income, the Total Medicare Standardized Payment and the Total Medicare Payment. Provisional Income has 408 missing entries, and payments have missing values in 918 rows each. In our data set we have 2244 missing data points total between these columns.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading packages </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mice)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmice)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mice)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(missForest)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VIM)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmice)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xlsx)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate pattern of missing data (Unsure how to access the data from the github so it works on the web)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Chronic_Conditions_STA6707_07132023 &lt;- Chronic_Conditions_Sta6707_07132023 %&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> <span class="co"># +select(Prvlnc, Tot_Mdcr_Stdzd_Pymt_PC, Tot_Mdcr_Pymt_PC)</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#md.pattern(Chronic_Conditions_STA6707_07132023)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions_STA6707_07132023 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"Chronic_Conditions_STA6707_07132023.xlsx"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate pattern of missing data </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions_STA6707_07132023 <span class="ot">&lt;-</span> Chronic_Conditions_STA6707_07132023 <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>( PrvInc , Stdzd_Pymt_PC, Pymt_PC)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pattern</span>(Chronic_Conditions_STA6707_07132023)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>aggr_plot <span class="ot">&lt;-</span> <span class="fu">aggr</span>(Chronic_Conditions_STA6707_07132023, <span class="at">col=</span><span class="fu">c</span>(<span class="st">'navyblue'</span>,<span class="st">'red'</span>), </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">numbers=</span><span class="cn">TRUE</span>, <span class="at">sortVars=</span><span class="cn">TRUE</span>, <span class="at">labels=</span><span class="fu">names</span>(data), <span class="at">cex.axis=</span>.<span class="dv">7</span>, <span class="at">gap=</span><span class="dv">3</span>, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Histogram of missing data"</span>,<span class="st">"Pattern"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Variables sorted by number of missings: 
+      Variable      Count
+ Stdzd_Pymt_PC 0.18681319
+       Pymt_PC 0.18681319
+        PrvInc 0.08302808</code></pre>
+</div>
+</div>
+<p>Figures 1 and 2: Missing Map and histogram</p>
+<p>We can see that over 75% of the data has been recorded but between those columns we are missing roughly 25% of our data which we will utilize the MICE package to impute. Following the Missing map, we ran the MICE package in R.</p>
 <p>Results:</p>
-<p>Figure 1: Missing Map</p>
-<p>Following the Missing map, we ran the MICE package in R. Below are the MICE code and results.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Imputes missing data using the three selected methods </span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#mice_imputed &lt;- data.frame ( </span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="co"># +imputed_pmm = complete(mice(Chronic_Conditions_Sta6707_07132023_numeric, method = "pmm"))$Prclnc,</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#+imputed_cart = complete(mice(Chronic_Conditions_Sta6707_07132023_numeric, method = "cart"))$Prclnc,</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#+imputed_lasso = complete(mice(Chronic_Conditions_Sta6707_07132023_numeric, method = "lasso.norm"))$Prclnc,</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#+)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Imputes missing data using the three selected methods </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mice_imputed <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">original =</span> Chronic_Conditions_STA6707_07132023<span class="sc">$</span>PrvInc,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_pmm =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions_STA6707_07132023, <span class="at">method =</span> <span class="st">"pmm"</span>))<span class="sc">$</span>PrvInc,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_cart =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions_STA6707_07132023, <span class="at">method =</span> <span class="st">"cart"</span>))<span class="sc">$</span>PrvInc,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_lasso =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions_STA6707_07132023, <span class="at">method =</span> <span class="st">"lasso.norm"</span>))<span class="sc">$</span>PrvInc</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ iter imp variable
+  1   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+
+ iter imp variable
+  1   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+
+ iter imp variable
+  1   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#mice_imputed #This would display all 4914 entries, alternatives? </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions_STA6707_07132023.mis <span class="ot">&lt;-</span> <span class="fu">prodNA</span>(Chronic_Conditions_STA6707_07132023, <span class="at">noNA =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Results:</p>
-<p>After running the MICE package, we ran a MICE plot to gain a better visual of our missing data. Below are the code, results, and figure.</p>
+<p>After running the MICE package, we ran a MICE plot to gain a better visual of our missing data.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#mice_plot &lt; - aggr(Chronic_Conditions_Sta6707_07132023.mis, col=c('navyblue', 'yellow' ),</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="co">#                  numbers=TRUE, sortVars=TRUE,</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                 labels=names(Chronic_Conditions_Sta6707_07132023.mis), cex.axis=.7,</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   <span class="co">#                gap=3, ylab=c("Missing Data", "Pattern"))</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#imputed_Data &lt; - mice(Chronic_Conditions_Sta6707_07132023.mis, m=5, maxit=50, method = 'pmm', seed=500)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(Chronic_Conditions_STA6707_07132023.mis, <span class="at">col=</span><span class="fu">c</span>(<span class="st">'navyblue'</span>, <span class="st">'yellow'</span> ),</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">numbers=</span><span class="cn">TRUE</span>, <span class="at">sortVars=</span><span class="cn">TRUE</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">labels=</span><span class="fu">names</span>(Chronic_Conditions_STA6707_07132023.mis), <span class="at">cex.axis=</span>.<span class="dv">7</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">gap=</span><span class="dv">3</span>, <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Missing Data"</span>, <span class="st">"Pattern"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
-<p>Results:</p>
-<p>Figure 2: Missing data percentages per variable</p>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Variables sorted by number of missings: 
+      Variable     Count
+ Stdzd_Pymt_PC 0.2765568
+       Pymt_PC 0.2629223
+        PrvInc 0.1705332</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>imputed_Data <span class="ot">&lt;-</span> <span class="fu">mice</span>(Chronic_Conditions_STA6707_07132023.mis, <span class="at">m=</span><span class="dv">5</span>, <span class="at">maxit=</span><span class="dv">50</span>, <span class="at">method =</span> <span class="st">'pmm'</span>, <span class="at">seed=</span><span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ iter imp variable
+  1   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  1   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  2   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  3   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  4   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  5   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  6   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  6   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  6   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  6   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  6   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  7   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  7   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  7   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  7   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  7   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  8   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  8   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  8   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  8   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  8   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  9   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  9   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  9   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  9   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  9   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  10   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  10   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  10   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  10   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  10   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  11   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  11   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  11   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  11   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  11   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  12   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  12   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  12   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  12   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  12   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  13   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  13   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  13   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  13   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  13   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  14   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  14   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  14   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  14   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  14   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  15   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  15   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  15   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  15   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  15   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  16   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  16   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  16   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  16   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  16   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  17   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  17   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  17   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  17   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  17   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  18   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  18   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  18   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  18   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  18   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  19   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  19   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  19   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  19   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  19   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  20   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  20   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  20   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  20   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  20   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  21   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  21   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  21   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  21   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  21   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  22   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  22   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  22   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  22   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  22   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  23   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  23   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  23   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  23   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  23   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  24   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  24   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  24   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  24   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  24   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  25   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  25   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  25   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  25   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  25   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  26   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  26   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  26   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  26   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  26   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  27   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  27   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  27   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  27   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  27   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  28   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  28   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  28   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  28   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  28   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  29   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  29   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  29   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  29   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  29   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  30   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  30   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  30   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  30   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  30   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  31   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  31   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  31   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  31   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  31   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  32   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  32   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  32   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  32   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  32   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  33   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  33   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  33   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  33   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  33   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  34   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  34   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  34   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  34   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  34   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  35   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  35   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  35   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  35   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  35   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  36   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  36   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  36   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  36   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  36   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  37   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  37   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  37   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  37   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  37   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  38   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  38   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  38   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  38   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  38   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  39   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  39   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  39   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  39   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  39   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  40   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  40   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  40   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  40   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  40   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  41   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  41   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  41   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  41   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  41   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  42   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  42   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  42   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  42   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  42   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  43   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  43   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  43   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  43   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  43   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  44   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  44   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  44   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  44   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  44   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  45   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  45   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  45   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  45   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  45   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  46   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  46   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  46   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  46   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  46   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  47   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  47   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  47   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  47   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  47   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  48   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  48   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  48   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  48   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  48   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  49   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  49   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  49   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  49   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  49   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  50   1  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  50   2  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  50   3  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  50   4  PrvInc  Stdzd_Pymt_PC  Pymt_PC
+  50   5  PrvInc  Stdzd_Pymt_PC  Pymt_PC</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md.pattern</span>(Chronic_Conditions_STA6707_07132023.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     PrvInc Pymt_PC Stdzd_Pymt_PC     
+2736      1       1             1    0
+324       1       1             0    1
+271       1       0             1    1
+745       1       0             0    2
+490       0       1             1    1
+72        0       1             0    2
+58        0       0             1    2
+218       0       0             0    3
+        838    1292          1359 3489</code></pre>
+</div>
+</div>
+<p>Figure 3: Missing data percentages per variable</p>
 <p>Additionally, we ran the miss Forest package in R. We ran the package followed by a summary to gain a better quantitative view. Below are the code, results, and figure.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Chronic_Conditions_Sta6707_07132023.mis &lt;- prodNA(Chronic_Conditions_Sta6707_07132023, noNA = 0.1)</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#md.pattern(Chronic_Conditions_Sta6707_07132023.mis)</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(Chronic_Conditions_Sta6707_07132023.mis)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pattern</span>(Chronic_Conditions_STA6707_07132023.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
-<p>Results:</p>
-<p>Figure 3: Table of missing values present in each variable in dataset</p>
+</div>
+<p>Figure 4: Table of missing values present in each variable in dataset</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Chronic_Conditions_STA6707_07132023.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     PrvInc       Stdzd_Pymt_PC      Pymt_PC      
+ Min.   :0.0000   Min.   :    0   Min.   :     0  
+ 1st Qu.:0.0387   1st Qu.:18593   1st Qu.: 18404  
+ Median :0.1108   Median :23106   Median : 23000  
+ Mean   :0.1727   Mean   :24007   Mean   : 24048  
+ 3rd Qu.:0.2764   3rd Qu.:28132   3rd Qu.: 28258  
+ Max.   :0.7588   Max.   :89235   Max.   :100028  
+ NA's   :838      NA's   :1359    NA's   :1292    </code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">densityplot</span>(imputed_Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Figure 5: Density Plot</p>
 </section>
 <section id="conlusion" class="level3">
 <h3 class="anchored" data-anchor-id="conlusion">Conlusion</h3>

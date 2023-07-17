@@ -23,6 +23,8 @@ There has also been discussion of the concept of using machine learning to addre
 
 Many researchers argue that single imputation methods should be used only in randomized trials [@awlb21]. 
 
+ 
+
 
 ## Types of Missing Data 
 
@@ -45,6 +47,8 @@ Meanwhile, [@ltclbghc21] deem the method beneficial for some use cases, but not 
 In addition to using MI, Little, et al. recommended using full-information maximum likelihood to mitigate the issues of missing data [@ljlmw14]. Using the three discussed planned missing data designs  - multiform questionnaire protocol, two-method planned missing design, and wave-missing longitudinal design – the user is able to better understand how to overcome missing data issues. 
 
 It is essential to have quality datasets to avoid corrupted machine learning models. A derivative of MI is the Multivariate Imputation by Chained Equation (MICE) algorithm which assumes data is missing at random (MAR). The process uses multiple imputation methods to provide better results by considering the uncertainty of missing data. Others[@kh20] provide an alternative to MICE. 
+
+![Multiple Imputation Process](MultiImputation.jpg)   
 
 Known as SICE, the new method improves upon the already existing Multivariate Imputation by Chained Equation (MICE) algorithm (found as a package in R), split into two variations to impute both categorical and numerical data. The method improves missing data by creating a hybrid of single and multiple imputation techniques. Using the respective variant, SICE-Categorical and SICE-Numeric, of the Single Center Imputation from Multiple Chained Equation (SICE) algorithm, the missing data values are corrected using a thorough approach to closely find a more accurate value to use instead, using predicted values imputed using the MI approach, by computing for the imputed values a mean or mode, depending on the data type, and replacing the original imputed value with the respective central measure. An added feature of using SICE in R is that it often had the lowest computation time for its data sets.
 
@@ -76,88 +80,107 @@ For our analysis, we decided to use the R packages for predictive means matching
 
 ### Analysis and Results
 
-Prior to implementing the MICE method, we ran a missing map to get a count of which columns contain missing data and how many data points are missing. Below are the MICE code and results, and figure.
-Code:
+Prior to implementing the MICE method, we ran a missing map to get a count of which rows and columns contain missing data and how many data points are missing. As the following table and figures will show most of the columns contain their complete data set. We do, however, have three columns – Provisional Income,  the Total Medicare Standardized Payment and the Total Medicare Payment. Provisional Income has 408 missing entries, and payments have missing values in 918 rows each. In our data set we have 2244 missing data points total between these columns.
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # loading packages 
+library(ggplot2)
+library(dplyr)
 library(mice)
+library(missForest)
+library(VIM)
 library(ggmice)
+library(xlsx)
 library(readxl)
-library(httr)
 
 ```
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
-# Calculate pattern of missing data (Unsure how to access the data from the github so it works on the web)
-#Chronic_Conditions_STA6707_07132023 <- Chronic_Conditions_Sta6707_07132023 %>%
- # +select(Prvlnc, Tot_Mdcr_Stdzd_Pymt_PC, Tot_Mdcr_Pymt_PC)
-#md.pattern(Chronic_Conditions_STA6707_07132023)
+
+Chronic_Conditions_STA6707_07132023 <- read_excel("Chronic_Conditions_STA6707_07132023.xlsx")
+
+
+#Calculate pattern of missing data 
+Chronic_Conditions_STA6707_07132023 <- Chronic_Conditions_STA6707_07132023 %>%
+  select( PrvInc , Stdzd_Pymt_PC, Pymt_PC)
+
+plot_pattern(Chronic_Conditions_STA6707_07132023)
+aggr_plot <- aggr(Chronic_Conditions_STA6707_07132023, col=c('navyblue','red'), 
+                  numbers=TRUE, sortVars=TRUE, labels=names(data), cex.axis=.7, gap=3, 
+                  ylab=c("Histogram of missing data","Pattern"))
 
 ```
+Figures 1 and 2: Missing Map and histogram 
+
  
+
+We can see that over 75% of the data has been recorded but between those columns we are missing roughly 25% of our data which we will utilize the MICE package to impute. 
+Following the Missing map, we ran the MICE package in R. 
 
 Results:
-
-
-Figure 1: Missing Map 
- 
-
-Following the Missing map, we ran the MICE package in R. Below are the MICE code and results.
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # Imputes missing data using the three selected methods 
-#mice_imputed <- data.frame ( 
- # +imputed_pmm = complete(mice(Chronic_Conditions_Sta6707_07132023_numeric, method = "pmm"))$Prclnc,
-  #+imputed_cart = complete(mice(Chronic_Conditions_Sta6707_07132023_numeric, method = "cart"))$Prclnc,
-  #+imputed_lasso = complete(mice(Chronic_Conditions_Sta6707_07132023_numeric, method = "lasso.norm"))$Prclnc,
-  #+)
+mice_imputed <- data.frame(
+  original = Chronic_Conditions_STA6707_07132023$PrvInc,
+  imputed_pmm = complete(mice(Chronic_Conditions_STA6707_07132023, method = "pmm"))$PrvInc,
+  imputed_cart = complete(mice(Chronic_Conditions_STA6707_07132023, method = "cart"))$PrvInc,
+  imputed_lasso = complete(mice(Chronic_Conditions_STA6707_07132023, method = "lasso.norm"))$PrvInc
+)
+#mice_imputed #This would display all 4914 entries, alternatives? 
+Chronic_Conditions_STA6707_07132023.mis <- prodNA(Chronic_Conditions_STA6707_07132023, noNA = 0.1)
+
+
 
 
 ```
 
+
  
-Results:
+
  
  
 
 
-After running the MICE package, we ran a MICE plot to gain a better visual of our missing data. Below are the code, results, and figure. 
+After running the MICE package, we ran a MICE plot to gain a better visual of our missing data. 
 ```{r, warning=FALSE, echo=T, message=FALSE}
-#mice_plot < - aggr(Chronic_Conditions_Sta6707_07132023.mis, col=c('navyblue', 'yellow' ),
- #                  numbers=TRUE, sortVars=TRUE,
-  #                 labels=names(Chronic_Conditions_Sta6707_07132023.mis), cex.axis=.7,
-   #                gap=3, ylab=c("Missing Data", "Pattern"))
-#imputed_Data < - mice(Chronic_Conditions_Sta6707_07132023.mis, m=5, maxit=50, method = 'pmm', seed=500)
+
+aggr(Chronic_Conditions_STA6707_07132023.mis, col=c('navyblue', 'yellow' ),
+                   numbers=TRUE, sortVars=TRUE,
+                   labels=names(Chronic_Conditions_STA6707_07132023.mis), cex.axis=.7,
+                  gap=3, ylab=c("Missing Data", "Pattern"))
+imputed_Data <- mice(Chronic_Conditions_STA6707_07132023.mis, m=5, maxit=50, method = 'pmm', seed=500)
+
+md.pattern(Chronic_Conditions_STA6707_07132023.mis)
+
+
 
 ```
- 
- 
-Results:
- 
- 
+Figure 3: Missing data percentages per variable
 
 
 
-Figure 2: Missing data percentages per variable
+
  
 
 Additionally, we ran the miss Forest package in R. We ran the package followed by a summary to gain a better quantitative view.  Below are the code, results, and figure.
 ```{r, warning=FALSE, echo=T, message=FALSE}
-#Chronic_Conditions_Sta6707_07132023.mis <- prodNA(Chronic_Conditions_Sta6707_07132023, noNA = 0.1)
-#md.pattern(Chronic_Conditions_Sta6707_07132023.mis)
-#summary(Chronic_Conditions_Sta6707_07132023.mis)
+
+plot_pattern(Chronic_Conditions_STA6707_07132023.mis)
+
 ```
+Figure 4: Table of missing values present in each variable in dataset
  
- 
+```{r, warning=FALSE, echo=T, message=FALSE}
 
- 
+summary(Chronic_Conditions_STA6707_07132023.mis)
+```
 
-Results:
- 
+```{r, warning=FALSE, echo=T, message=FALSE}
 
- 
+densityplot(imputed_Data)
 
-Figure 3: Table of missing values present in each variable in dataset
- 
-
+```
+Figure 5: Density Plot
 
 ### Conlusion
 
