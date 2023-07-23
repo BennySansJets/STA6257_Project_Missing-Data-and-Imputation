@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Natalie Belford, Benjamin Brustad, Jasmine Hyler">
-<meta name="dcterms.date" content="2023-07-22">
+<meta name="dcterms.date" content="2023-07-23">
 
 <title>Missing Data and Imputation</title>
 <style>
@@ -119,7 +119,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 22, 2023</p>
+      <p class="date">July 23, 2023</p>
     </div>
   </div>
   
@@ -221,50 +221,47 @@ div.csl-indent {
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"Chronic_Conditions.xlsx"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## reading data file from github</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"Chronic_Conditions.xlsx"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate pattern of missing data </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions <span class="ot">&lt;-</span> Chronic_Conditions <span class="sc">%&gt;%</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>( PrvInc , Stdzd_Pymt_PC, Pymt_PC)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate pattern of missing data </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions <span class="ot">&lt;-</span> Chronic_Conditions <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>( PrvInc , Stdzd_Pymt_PC, Pymt_PC)</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pattern</span>(Chronic_Conditions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Display table of missing entries per variable(complete columns were omitted)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pattern</span>(Chronic_Conditions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
+</div>
+<p>Figure 3: Missing Map</p>
+<div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>aggr_plot <span class="ot">&lt;-</span> <span class="fu">aggr</span>(Chronic_Conditions, <span class="at">col=</span><span class="fu">c</span>(<span class="st">'navyblue'</span>,<span class="st">'red'</span>), </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">numbers=</span><span class="cn">TRUE</span>, <span class="at">sortVars=</span><span class="cn">TRUE</span>, <span class="at">labels=</span><span class="fu">names</span>(data), <span class="at">cex.axis=</span>.<span class="dv">7</span>, <span class="at">gap=</span><span class="dv">3</span>, </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Histogram of missing data"</span>,<span class="st">"Pattern"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Histogram of that same missingness data </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>aggr_plot <span class="ot">&lt;-</span> <span class="fu">aggr</span>(Chronic_Conditions, <span class="at">col=</span><span class="fu">c</span>(<span class="st">'navyblue'</span>,<span class="st">'red'</span>), </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">numbers=</span><span class="cn">TRUE</span>, <span class="at">sortVars=</span><span class="cn">FALSE</span>, <span class="at">labels=</span><span class="fu">names</span>(data), <span class="at">cex.axis=</span>.<span class="dv">7</span>, <span class="at">gap=</span><span class="dv">3</span>, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Histogram of missing data"</span>,<span class="st">"Pattern"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
- Variables sorted by number of missings: 
-      Variable      Count
- Stdzd_Pymt_PC 0.18681319
-       Pymt_PC 0.18681319
-        PrvInc 0.08302808</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Figures 3 and 4: Missing Map and histogram</p>
+<p>Figure 4: Histogram</p>
 <p>We can see that over 75% of the data has been recorded but between those columns we are missing roughly 25% of our data which we will utilize the MICE package to impute. Following the Missing map, we ran the MICE package in R.</p>
 <p>Results:</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Imputes missing data using the three selected methods </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mice_imputed <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">original =</span> Chronic_Conditions<span class="sc">$</span>PrvInc,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_pmm =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions, <span class="at">method =</span> <span class="st">"pmm"</span>))<span class="sc">$</span>PrvInc,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_cart =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions, <span class="at">method =</span> <span class="st">"cart"</span>))<span class="sc">$</span>PrvInc,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_lasso =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions, <span class="at">method =</span> <span class="st">"lasso.norm"</span>))<span class="sc">$</span>PrvInc</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Imputes missing data using the three selected methods </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mice_imputed <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">original =</span> Chronic_Conditions<span class="sc">$</span>PrvInc,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_pmm =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions, <span class="at">method =</span> <span class="st">"pmm"</span>))<span class="sc">$</span>PrvInc,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_cart =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions, <span class="at">method =</span> <span class="st">"cart"</span>))<span class="sc">$</span>PrvInc,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">imputed_lasso =</span> <span class="fu">complete</span>(<span class="fu">mice</span>(Chronic_Conditions, <span class="at">method =</span> <span class="st">"lasso.norm"</span>))<span class="sc">$</span>PrvInc</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -351,33 +348,32 @@ div.csl-indent {
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#mice_imputed #This would display all 4914 entries, alternatives? </span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions.mis <span class="ot">&lt;-</span> <span class="fu">prodNA</span>(Chronic_Conditions, <span class="at">noNA =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#mice_imputed #This would display all 4914 entries, alternatives?</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Imputation using miss Forest </span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>Chronic_Conditions.mis <span class="ot">&lt;-</span> <span class="fu">prodNA</span>(Chronic_Conditions, <span class="at">noNA =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>After running the MICE package, we ran a MICE plot to gain a better visual of our missing data.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(Chronic_Conditions.mis, <span class="at">col=</span><span class="fu">c</span>(<span class="st">'navyblue'</span>, <span class="st">'yellow'</span> ),</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">numbers=</span><span class="cn">TRUE</span>, <span class="at">sortVars=</span><span class="cn">TRUE</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">labels=</span><span class="fu">names</span>(Chronic_Conditions.mis), <span class="at">cex.axis=</span>.<span class="dv">7</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">gap=</span><span class="dv">3</span>, <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Missing Data"</span>, <span class="st">"Pattern"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots missing data percentages per variable </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(Chronic_Conditions.mis, <span class="at">col=</span><span class="fu">c</span>(<span class="st">'navyblue'</span>, <span class="st">'yellow'</span> ),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">numbers=</span><span class="cn">TRUE</span>, <span class="at">sortVars=</span><span class="cn">FALSE</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">labels=</span><span class="fu">names</span>(Chronic_Conditions.mis), <span class="at">cex.axis=</span>.<span class="dv">7</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">gap=</span><span class="dv">3</span>, <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Missing Data"</span>, <span class="st">"Pattern"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
- Variables sorted by number of missings: 
-      Variable     Count
-       Pymt_PC 0.2704518
- Stdzd_Pymt_PC 0.2663818
-        PrvInc 0.1748067</code></pre>
 </div>
+<p>Figure 5: Missing data percentages per variable</p>
+<div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>imputed_Data <span class="ot">&lt;-</span> <span class="fu">mice</span>(Chronic_Conditions.mis, <span class="at">m=</span><span class="dv">5</span>, <span class="at">maxit=</span><span class="dv">50</span>, <span class="at">method =</span> <span class="st">'pmm'</span>, <span class="at">seed=</span><span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># New imputation using PMM</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>imputed_Data <span class="ot">&lt;-</span> <span class="fu">mice</span>(Chronic_Conditions.mis, <span class="at">m=</span><span class="dv">5</span>, <span class="at">maxit=</span><span class="dv">50</span>, <span class="at">method =</span> <span class="st">'pmm'</span>, <span class="at">seed=</span><span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -635,65 +631,69 @@ div.csl-indent {
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md.pattern</span>(Chronic_Conditions.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Outputs Tabular and graphical representation of that imputation </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">md.pattern</span>(Chronic_Conditions.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     PrvInc Stdzd_Pymt_PC Pymt_PC     
-2707      1             1       1    0
-308       1             1       0    1
-299       1             0       1    1
-741       1             0       0    2
-524       0             1       1    1
-66        0             1       0    2
-55        0             0       1    2
-214       0             0       0    3
-        859          1309    1329 3497</code></pre>
+<pre><code>     PrvInc Pymt_PC Stdzd_Pymt_PC     
+2712      1       1             1    0
+303       1       1             0    1
+300       1       0             1    1
+756       1       0             0    2
+520       0       1             1    1
+60        0       1             0    2
+56        0       0             1    2
+207       0       0             0    3
+        843    1319          1326 3488</code></pre>
 </div>
 </div>
-<p>Figure 4: Missing data percentages per variable</p>
 <p>Additionally, we ran the miss Forest package in R. We ran the package followed by a summary to gain a better quantitative view. Below are the code, results, and figure.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pattern</span>(Chronic_Conditions.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>Figure 5: Table of missing values present in each variable in dataset</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Chronic_Conditions.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>     PrvInc       Stdzd_Pymt_PC      Pymt_PC      
- Min.   :0.0000   Min.   :    0   Min.   :     0  
- 1st Qu.:0.0384   1st Qu.:18643   1st Qu.: 18446  
- Median :0.1114   Median :23183   Median : 22980  
- Mean   :0.1728   Mean   :24045   Mean   : 24065  
- 3rd Qu.:0.2751   3rd Qu.:28214   3rd Qu.: 28215  
- Max.   :0.7588   Max.   :68567   Max.   :100028  
- NA's   :859      NA's   :1309    NA's   :1329    </code></pre>
-</div>
-</div>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">densityplot</span>(imputed_Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Missingness data for miss Forest</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pattern</span>(Chronic_Conditions.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Figure 6: Density Plot</p>
+<p>Figure 6: Table of missing values present in each variable in dataset</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Summarizes the POOLED data after miss Forest imputation</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Chronic_Conditions.mis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     PrvInc       Stdzd_Pymt_PC      Pymt_PC      
+ Min.   :0.0000   Min.   :    0   Min.   :     0  
+ 1st Qu.:0.0388   1st Qu.:18568   1st Qu.: 18467  
+ Median :0.1098   Median :23194   Median : 23084  
+ Mean   :0.1716   Mean   :24007   Mean   : 24091  
+ 3rd Qu.:0.2732   3rd Qu.:28095   3rd Qu.: 28344  
+ Max.   :0.7588   Max.   :89235   Max.   :100028  
+ NA's   :843      NA's   :1326    NA's   :1319    </code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Density plot to compare to original data</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">densityplot</span>(imputed_Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Figure 7: Density Plot with original data distribution in Blue and each red line is a different imputation</p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Multiple imputation is the act of completing data sets where there are missing data points. The purpose of multiple imputation is to utilize multiple analyses for what the missing data value could be and combining them in order to have a less biased and more accurate result. Multivariate Imputation by Chained Equations, or MICE, in R is a highly effective way to impute missing data into data sets. The benefit of using multiple imputation, specifically MICE, is that we are using multiple possible outcomes for each data point which accounts for a certain amount of uncertainty. Within the MICE package we utilized PMM, Lasso and Cart methods if imputation – each will produce results based off of a different type of analysis with the results being not only a combination of them but also a combination of each imputation(there are normally 5-20 each time before final results are pooled). Multiple imputation allows for, under certain conditions, unbiased results which is the hoped for outcome when imputing data. In other methods, you create a biased result by removing data or utilizing an average, etc. With multiple imputation the final results tend to be more accurate and more on trend with the original data set due to the use of multiple results before the final result is determined. From our data set we can see with our final Density Plot that not only does one or some of the imputed data results follow the trendline closely, but all do. We can determine that the imputed data, when this close to the trendline, will be fairly accurate. We can also assume a non-biased result as no data was removed prior to utilizing our MICE package simply because we of missing data.</p>
 <section id="references" class="level3 unnumbered">
 
 

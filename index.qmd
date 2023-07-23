@@ -125,7 +125,7 @@ library(knitr)
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
-
+## reading data file from github
 Chronic_Conditions <- read_excel("Chronic_Conditions.xlsx")
 
 
@@ -133,16 +133,21 @@ Chronic_Conditions <- read_excel("Chronic_Conditions.xlsx")
 Chronic_Conditions <- Chronic_Conditions %>%
   select( PrvInc , Stdzd_Pymt_PC, Pymt_PC)
 
-
+## Display table of missing entries per variable(complete columns were omitted)
 plot_pattern(Chronic_Conditions)
-aggr_plot <- aggr(Chronic_Conditions, col=c('navyblue','red'), 
-                  numbers=TRUE, sortVars=TRUE, labels=names(data), cex.axis=.7, gap=3, 
-                  ylab=c("Histogram of missing data","Pattern"))
+
+
 
 ```
-Figures 3 and 4: Missing Map and histogram 
+Figure 3:  Missing Map 
 
- 
+```{r}
+#Histogram of that same missingness data 
+aggr_plot <- aggr(Chronic_Conditions, col=c('navyblue','red'), 
+                  numbers=TRUE, sortVars=FALSE, labels=names(data), cex.axis=.7, gap=3, 
+                  ylab=c("Histogram of missing data","Pattern"))
+```
+Figure 4:  Histogram  
 
 We can see that over 75% of the data has been recorded but between those columns we are missing roughly 25% of our data which we will utilize the MICE package to impute. 
 Following the Missing map, we ran the MICE package in R. 
@@ -156,7 +161,9 @@ mice_imputed <- data.frame(
   imputed_cart = complete(mice(Chronic_Conditions, method = "cart"))$PrvInc,
   imputed_lasso = complete(mice(Chronic_Conditions, method = "lasso.norm"))$PrvInc
 )
-#mice_imputed #This would display all 4914 entries, alternatives? 
+#mice_imputed #This would display all 4914 entries, alternatives?
+
+#Imputation using miss Forest 
 Chronic_Conditions.mis <- prodNA(Chronic_Conditions, noNA = 0.1)
 
 
@@ -174,18 +181,25 @@ Chronic_Conditions.mis <- prodNA(Chronic_Conditions, noNA = 0.1)
 After running the MICE package, we ran a MICE plot to gain a better visual of our missing data. 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
+# Plots missing data percentages per variable 
 aggr(Chronic_Conditions.mis, col=c('navyblue', 'yellow' ),
-                   numbers=TRUE, sortVars=TRUE,
+                   numbers=TRUE, sortVars=FALSE,
                    labels=names(Chronic_Conditions.mis), cex.axis=.7,
                   gap=3, ylab=c("Missing Data", "Pattern"))
+```
+Figure 5: Missing data percentages per variable
+
+```{r}
+# New imputation using PMM
 imputed_Data <- mice(Chronic_Conditions.mis, m=5, maxit=50, method = 'pmm', seed=500)
 
+#Outputs Tabular and graphical representation of that imputation 
 md.pattern(Chronic_Conditions.mis)
 
 
 
 ```
-Figure 4: Missing data percentages per variable
+
 
 
 
@@ -195,23 +209,26 @@ Figure 4: Missing data percentages per variable
 Additionally, we ran the miss Forest package in R. We ran the package followed by a summary to gain a better quantitative view.  Below are the code, results, and figure.
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
+#Missingness data for miss Forest
 plot_pattern(Chronic_Conditions.mis)
 
 ```
-Figure 5: Table of missing values present in each variable in dataset
+Figure 6: Table of missing values present in each variable in dataset
  
 ```{r, warning=FALSE, echo=T, message=FALSE}
-
+#Summarizes the POOLED data after miss Forest imputation
 summary(Chronic_Conditions.mis)
 ```
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
-
+# Density plot to compare to original data
 densityplot(imputed_Data)
 
 ```
-Figure 6: Density Plot
+Figure 7: Density Plot with original data distribution in Blue and each red line is a different imputation 
 
 ## Conclusion
+
+Multiple imputation is the act of completing data sets where there are missing data points. The purpose of multiple imputation is to utilize multiple analyses for what the missing data value could be and combining them in order to have a less biased and more accurate result. Multivariate Imputation by Chained Equations, or MICE, in R is a highly effective way to impute missing data into data sets.  The benefit of using multiple imputation, specifically MICE, is that we are using multiple possible outcomes for each data point which accounts for a certain amount of uncertainty. Within the MICE package we utilized PMM, Lasso and Cart methods if imputation – each will produce results based off of a different type of analysis with the results being not only a combination of them but also a combination of each imputation(there are normally 5-20 each time before final results are pooled). Multiple imputation allows for, under certain conditions, unbiased results which is the hoped for outcome when imputing data. In other methods, you create a biased result by removing data or utilizing an average, etc. With multiple imputation the final results tend to be more accurate and more on trend with the original data set due to the use of multiple results before the final result is determined. From our data set we can see with our final Density Plot that not only does one or some of the imputed data results follow the trendline closely, but all do. We can determine that the imputed data, when this close to the trendline, will be fairly accurate. We can also assume a non-biased result as no data was removed prior to utilizing our MICE package simply because we of missing data. 
 
 ### References
