@@ -10,6 +10,8 @@ bibliography: references.bib # file contains bibtex for references
 #always_allow_html: true # this allows to get PDF with HTML features
 ---
 
+[Slides](Slides.html)
+
 ## Introduction
 Missing data is ubiquitous in any dataset. Although alone it is not a problem, missing data becomes a problem when its analysis shows bias or lacks power. While the occurrence of missing data is immense, its discussion in many peer-reviewed journal articles is not so. Even more infrequent are the discussions on how best to accurately institute observations in the missing dataset. Some researchers [@ljlmw14] have observed that, there are areas of loss when it comes to missing data – bias, power, and recoverability. 
 
@@ -73,7 +75,7 @@ B=\frac{\sum(\hat{\theta_t}-\bar{\theta})^2}{m-1} \tag{2}
 $$
 
 $$
-SE=\sqrt{W+B+\frac{B}{m}}
+SE=\sqrt{W+B+\frac{B}{m}}  \tag3
 $$
 
 
@@ -164,12 +166,13 @@ Results:
 # Imputes missing data using the three selected methods 
 mice_imputed <- data.frame(
   original = Chronic_Conditions$PrvInc,
-  imputed_pmm = complete(mice(Chronic_Conditions, method = "pmm"))$PrvInc,
-  imputed_cart = complete(mice(Chronic_Conditions, method = "cart"))$PrvInc,
-  imputed_lasso = complete(mice(Chronic_Conditions, method = "lasso.norm"))$PrvInc
-)
-#mice_imputed #This would display all 4914 entries, alternatives?
+ imputed_pmm = complete(mice(Chronic_Conditions, method = "pmm", printFlag = FALSE))$PrvInc,
+  imputed_cart = complete(mice(Chronic_Conditions, method = "cart", printFlag = FALSE))$PrvInc,
+  imputed_lasso = complete(mice(Chronic_Conditions, method = "lasso.norm", printFlag = FALSE))$PrvInc)
 
+
+
+#head(mice_imputed)
 #Imputation using miss Forest 
 Chronic_Conditions.mis <- prodNA(Chronic_Conditions, noNA = 0.1)
 
@@ -198,7 +201,7 @@ Figure 5: Missing data percentages per variable
 
 ```{r}
 # New imputation using PMM
-imputed_Data <- mice(Chronic_Conditions.mis, m=5, maxit=50, method = 'pmm', seed=500)
+imputed_Data <- mice(Chronic_Conditions.mis, m=5, maxit=50, method = 'pmm', seed=500, printFlag = FALSE)
 
 #Outputs Tabular and graphical representation of that imputation 
 md.pattern(Chronic_Conditions.mis)
