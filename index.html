@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Natalie Belford, Benjamin Brustad, Jasmine Hyler">
-<meta name="dcterms.date" content="2023-07-23">
+<meta name="dcterms.date" content="2023-07-24">
 
 <title>Missing Data and Imputation</title>
 <style>
@@ -119,7 +119,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 23, 2023</p>
+      <p class="date">July 24, 2023</p>
     </div>
   </div>
   
@@ -165,9 +165,10 @@ div.csl-indent {
 <p>The dataset used to conduct the below Missing Imputation methods was adapted from the most recent study conducted by the U.S. Department of Health &amp; Human Services which examined 21 specific chronic illnesses of Medicare beneficiaries <span class="citation" data-cites="CMMS">(<a href="#ref-CMMS" role="doc-biblioref">Medicare &amp; Medicaid Services 2018</a>)</span>.</p>
 <p>The Multiple Imputation (MI) approach is used to correct the issue of imputing multiple times the missing values from the predictive distribution of the missing given observed data. “Next, the analysis model is fitted to each ‘complete’ data set and results combined using Rubin’s rules” <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>. Bias can be reduced and efficiency increased by using in the imputation step the auxiliary variables (predictive of missing values but not in the substantive model). The MI method is good but is not appropriate for handling all missing data records.</p>
 <p>There is a three-step process for conducting a statistical analysis of MI. The stages are 1) Selecting independent variables that may help impute variables with missing data, 2) Noting the chosen statistical method, estimating in each of the imputed datasets the association of interest, and 3) Combining using Rubin’s rules the association measures from each imputed dataset <span class="citation" data-cites="r76">(<a href="#ref-r76" role="doc-biblioref">Rubin 1976</a>)</span>. To combine, we use the following equations for Standard Error(SE), Arithmetic Average(W) and the Variability of the estimates(B), where t is a particular dataset, m is the total amount of imputed datasets, <span class="math inline">\(\hat{\theta}\)</span> and <span class="math inline">\(\bar{\theta_t}\)</span> are the average parameter estimate and the parameter estimate for a particular dataset, respectively. <span class="citation" data-cites="oap18">(<a href="#ref-oap18" role="doc-biblioref">Osman, Abu-Mahfouz, and Page 2018</a>)</span></p>
-<p><span class="math display">\[
-\begin{align*} W=&amp;\frac {\sum \left ({{SE}_{t} }\right)^{2}}{m} \tag{1}\\ B=&amp;\frac {\sum \left ({\hat {\theta }_{t}-\bar {\theta } }\right)^{2}}{m-1} \tag{2}\\ SE=&amp;\sqrt {W+B+\frac {B}{m}}\tag{3}\end{align*}
-\]</span></p>
+<p>$$ W=}{m} </p>
+<p>B=}{m-1} </p>
+<p>SE= </p>
+<p>$$</p>
 <p><span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a> )</span> provide exceptional detail on how to alleviate missing data using full-information maximum likelihood and multiple imputations followed by a presentation of 3-form planned missing design to include multiform questionnaire protocols, 2-method measurement models, and wave-missing longitudinal designs.</p>
 <p>TARMOS consists of three main steps with a series of subsets within each step. The steps are as follows. Step 1: Plan the analysis, step 2: Conduct the preplanned analysis, step 3: Report the analysis <span class="citation" data-cites="ltclbghc21">(<a href="#ref-ltclbghc21" role="doc-biblioref">Lee et al. 2021</a>)</span>. The framework’s emphasis is on transparency. All expectations of the analysis and the research interests should be disclosed.</p>
 <p>One proposed method which we deem computationally feasible for this project is multiple imputation <span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a> )</span>. The methodology includes performing single imputation with multiple data sets, analyzing and computing the error of each set, and combining the data into a single, final data set.</p>
@@ -639,15 +640,15 @@ div.csl-indent {
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     PrvInc Pymt_PC Stdzd_Pymt_PC     
-2712      1       1             1    0
-303       1       1             0    1
-300       1       0             1    1
-756       1       0             0    2
-520       0       1             1    1
-60        0       1             0    2
-56        0       0             1    2
-207       0       0             0    3
-        843    1319          1326 3488</code></pre>
+2711      1       1             1    0
+310       1       1             0    1
+291       1       0             1    1
+723       1       0             0    2
+543       0       1             1    1
+55        0       1             0    2
+47        0       0             1    2
+234       0       0             0    3
+        879    1295          1322 3496</code></pre>
 </div>
 </div>
 <p>Additionally, we ran the miss Forest package in R. We ran the package followed by a summary to gain a better quantitative view. Below are the code, results, and figure.</p>
@@ -671,12 +672,12 @@ div.csl-indent {
 <div class="cell-output cell-output-stdout">
 <pre><code>     PrvInc       Stdzd_Pymt_PC      Pymt_PC      
  Min.   :0.0000   Min.   :    0   Min.   :     0  
- 1st Qu.:0.0388   1st Qu.:18568   1st Qu.: 18467  
- Median :0.1098   Median :23194   Median : 23084  
- Mean   :0.1716   Mean   :24007   Mean   : 24091  
- 3rd Qu.:0.2732   3rd Qu.:28095   3rd Qu.: 28344  
- Max.   :0.7588   Max.   :89235   Max.   :100028  
- NA's   :843      NA's   :1326    NA's   :1319    </code></pre>
+ 1st Qu.:0.0381   1st Qu.:18655   1st Qu.: 18387  
+ Median :0.1110   Median :23300   Median : 22992  
+ Mean   :0.1723   Mean   :24075   Mean   : 24055  
+ 3rd Qu.:0.2753   3rd Qu.:28192   3rd Qu.: 28260  
+ Max.   :0.7588   Max.   :68567   Max.   :100028  
+ NA's   :879      NA's   :1322    NA's   :1295    </code></pre>
 </div>
 </div>
 <div class="cell">
