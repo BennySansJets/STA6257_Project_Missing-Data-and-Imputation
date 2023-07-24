@@ -62,7 +62,7 @@ The dataset used to conduct the below Missing Imputation methods was adapted fro
 
 The Multiple Imputation (MI) approach is used to correct the issue of imputing multiple times the missing values from the predictive distribution of the missing given observed data. “Next, the analysis model is fitted to each ‘complete’ data set and results combined using Rubin’s rules” [@k13]. Bias can be reduced and efficiency increased by using in the imputation step the auxiliary variables (predictive of missing values but not in the substantive model). The MI method is good but is not appropriate for handling all missing data records. 
 
-There is a three-step process for conducting a statistical analysis of MI. The stages are 1) Selecting independent variables that may help impute variables with missing data, 2) Noting the chosen statistical method, estimating in each of the imputed datasets the association of interest, and 3) Combining using  Rubin’s rules the association measures from each imputed dataset [@r76]. To combine, we use the following equations for Standard Error(SE), Arithmetic Average(W) and the Variability of the estimates(B), where t is a particular dataset, m is the total amount of imputed datasets, $\hat{\theta}$ and $\bar{\theta_t}$ are the average parameter estimate and the parameter estimate for a particular dataset, respectively. [@oap18]
+There is a three-step process for conducting a statistical analysis of MI. The stages are 1) Selecting independent variables that may help impute variables with missing data, 2) Noting the chosen statistical method, estimating in each of the imputed datasets the association of interest, and 3) Combining using  Rubin’s rules the association measures from each imputed dataset [@r76]. To combine, we use the following equations for Standard Error(SE), Arithmetic Average(W) and the Variability of the estimates(B), where t is a particular dataset, m is the total amount of imputed datasets, $\bar{\theta}$ and $\hat{\theta_t}$ are the average parameter estimate and the parameter estimate for a particular dataset, respectively. [@oap18]
 
 $$
 W=\frac{\sum({SE_t}^2)}{m} \tag{1}
@@ -70,10 +70,12 @@ $$
 $$
 B=\frac{\sum(\hat{\theta_t}-\bar{\theta})^2}{m-1} \tag{2}
 $$
-$$
-SE=\sqrt{W+B+\frac{B}{m}}       \tag{3}
 
 $$
+SE=\sqrt{W+B+\frac{B}{m}}
+$$
+
+
 
 [@ljlmw14 ] provide exceptional detail on how to alleviate missing data using full-information maximum likelihood and multiple imputations followed by a presentation of 3-form planned missing design to include multiform questionnaire protocols, 2-method measurement models, and wave-missing longitudinal designs.
 
