@@ -88,7 +88,7 @@ Researchers tested SICE performance against that of 12 existing imputation metho
 
 Using Multiple Imputation by Chained Equations (MICE), the multiple imputation is conducted by manipulating the imputed data and comparing it to the regression, repeating the process multiple times, (usually 5-20), to create a single data set. Most modern imputations will create 20-100 data sets. Then each of these data sets will be analyzed and compared, such that the MI estimate of any statistic is the average of the statistic across each imputed set. The variance of each statistic is based on the within-imputation variation and the between-imputation variation [@awlb21]. The variable that is to be analyzed must be included in the imputation model, even if there is no missing data, otherwise, it will often be biased towards null.
 
-For our analysis, we decided to use the R packages for predictive means matching, classification and regression trees, and lasso linear regression, defined below.  
+For our analysis, we decided to use the R packages for predictive means matching, classification and regression trees, lasso linear regression, and Random Forest, defined below.  
 
 ### Equations 
 
@@ -112,6 +112,7 @@ Lasso linear regression fits a linear regression using the missing columns as de
 
 $$(\hat{\beta_0}, \hat{\beta}^{lasso}) =argmin[\sum(Y_i-(\beta_0+\beta X^T_i))^2+\lambda \sum |\beta_j|] \tag5$$
 where Y and X are the outcome and predictors respectively. λ is a non-negative tuning parameter that controls the amount of shrinkage, with increased shrinkage for higher λ values [@MZPRG14]. 
+
 
 
 ## Analysis and Results
