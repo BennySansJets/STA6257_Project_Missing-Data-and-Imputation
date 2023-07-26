@@ -43,9 +43,9 @@ Missing Not at Random (MNAR) refers to any case of missing data that cannot be c
 
 #### Types of Missing Data Solutions 
 
-Kang attempts to provide solutions to fill in the missing data points[@k13] . His research suggests the best solution to missing data is to be proactive to prevent it. When prevention fails to eliminate missing data, Kang offers several data analysis solutions to make the data more robust. The most common solution is complete case analysis, also stated as listwise analysis, with the aim to eliminate the missing data records altogether and analyze only the remaining whole data records. 
+Kang attempts to provide solutions to fill in the missing data points [@k13]. His research suggests the best solution to missing data is to be proactive to prevent it. When prevention fails to eliminate missing data, Kang offers several data analysis solutions to make the data more robust. The most common solution is complete case analysis, also stated as listwise analysis, with the aim to eliminate the missing data records altogether and analyze only the remaining whole data records. 
 
-Meanwhile, Lee et al.[-@ltclbghc21] deem the method beneficial for some use cases, but not sufficient for most analyses. They introduce Treatment and Reporting of Missing data in Observational Studies (TARMOS), a novel framework alternative to MI. TARMOS's aim is to provide transparency and limit redundancies in substituted data. The framework notes the importance of using auxiliary variables to gather information from incomplete observations. 
+Meanwhile, Lee et al. [-@ltclbghc21] deem the method beneficial for some use cases, but not sufficient for most analyses. They introduce Treatment and Reporting of Missing data in Observational Studies (TARMOS), a novel framework alternative to MI. TARMOS's aim is to provide transparency and limit redundancies in substituted data. The framework notes the importance of using auxiliary variables to gather information from incomplete observations. 
 
 In addition to using MI, Little, et al. recommended using full-information maximum likelihood to mitigate the issues of missing data [@ljlmw14]. Using the three discussed planned missing data designs  - multiform questionnaire protocol, two-method planned missing design, and wave-missing longitudinal design – the user is able to better understand how to overcome missing data issues. 
 
@@ -65,7 +65,7 @@ The dataset used to conduct the below Missing Imputation methods was adapted fro
 
 The Multiple Imputation (MI) approach is used to correct the issue of imputing multiple times the missing values from the predictive distribution of the missing values given observed data. “Next, the analysis model is fitted to each ‘complete’ data set and results combined using Rubin’s rules” [@k13]. Bias can be reduced and efficiency increased by using in the imputation step the auxiliary variables (predictive of missing values but not in the substantive model). The MI method is good but is not appropriate for handling all missing data records. 
 
-There is a three-step process for conducting a statistical analysis of MI. The stages are 1) Selecting independent variables that may help impute variables with missing data, 2) Noting the chosen statistical method, estimating in each of the imputed datasets the association of interest, and 3) Combining using  Rubin’s rules the association measures from each imputed dataset [@r76]. To combine, we use the following equations for Standard Error(SE), Arithmetic Average(W) and the Variability of the estimates(B), where t is a particular dataset, m is the total amount of imputed datasets, $\bar{\theta}$ and $\hat{\theta_t}$ are the average parameter estimate and the parameter estimate for a particular dataset, respectively. [@oap18]
+There is a three-step process for conducting a statistical analysis of MI. The stages are 1) Selecting independent variables that may help impute variables with missing data, 2) Noting the chosen statistical method, estimating in each of the imputed datasets the association of interest, and 3) Combining using  Rubin’s rules the association measures from each imputed dataset [@r76]. To combine, we use the following equations for Standard Error(SE), Arithmetic Average(W) and the Variability of the estimates(B), where t is a particular dataset, m is the total amount of imputed datasets, $\bar{\theta}$ and $\hat{\theta_t}$ are the average parameter estimate and the parameter estimate for a particular dataset, respectively [@oap18].
 
 $$
 W=\frac{\sum({SE_t}^2)}{m} \tag{1}
@@ -88,7 +88,7 @@ Researchers tested SICE performance against that of 12 existing imputation metho
 
 Using Multiple Imputation by Chained Equations (MICE), the multiple imputation is conducted by manipulating the imputed data and comparing it to the regression, repeating the process multiple times, (usually 5-20), to create a single data set. Most modern imputations will create 20-100 data sets. Then each of these data sets will be analyzed and compared, such that the MI estimate of any statistic is the average of the statistic across each imputed set. The variance of each statistic is based on the within-imputation variation and the between-imputation variation [@awlb21]. The variable that is to be analyzed must be included in the imputation model, even if there is no missing data, otherwise, it will often be biased towards null.
 
-For our analysis, we decided to use the R packages for predictive means matching, classification and regression trees, and lasso linear regression, defined below.  
+For our analysis, we decided to use the R packages for predictive means matching, classification and regression trees, lasso linear regression, and Random Forest, defined below.  
 
 ### Equations 
 
@@ -112,6 +112,7 @@ Lasso linear regression fits a linear regression using the missing columns as de
 
 $$(\hat{\beta_0}, \hat{\beta}^{lasso}) =argmin[\sum(Y_i-(\beta_0+\beta X^T_i))^2+\lambda \sum |\beta_j|] \tag5$$
 where Y and X are the outcome and predictors respectively. λ is a non-negative tuning parameter that controls the amount of shrinkage, with increased shrinkage for higher λ values [@MZPRG14]. 
+
 
 
 ## Analysis and Results
@@ -240,8 +241,8 @@ Figure 7: Density Plot with original data distribution in Blue and each red line
 ## Conclusion
 
 
-Missing data is a common finding when analyzing datasets, yet can be easily addressed. Unlike other data analysis cleaning methods which create biased results by removing data or imputing an average, Multiple imputation is the act of completing data sets where there are missing data points. MI’s purpose is to utilize multiple analyses for what the missing data value could be, then combine analyses results in order to have a less biased and more accurate outcome. Multivariate Imputation by Chained Equations, or MICE, in R is a highly effective way to impute missing data into data sets. One key benefit of using MI, or more specifically MICE, is to reduce uncertainty by using multiple possible outcomes for each data point. Within the MICE package are PMM, Lasso and Cart methods if imputation. Each method will produce results based off of a different type of analysis which will include both a combination of the different analysis types and a combination of each imputation.  
+Missing data is a common finding when analyzing datasets, yet can be easily addressed. Unlike other data analysis cleaning methods which create biased results by removing data or imputing an average, Multiple imputation is the act of completing data sets where there are missing data points. MI’s purpose is to utilize multiple analyses for what the missing data value could be, then combine analyses results in order to have a less biased and more accurate outcome. Multivariate Imputation by Chained Equations, or MICE, in R is a highly effective way to impute missing data into data sets. One key benefit of using MI, or more specifically MICE, is to reduce uncertainty by using multiple possible outcomes for each data point. Within the MICE package are PMM, Lasso and Cart methods if imputation. Each method will produce results based off of a different type of analysis which will include both a combination of the different analysis types and a combination of each imputation. From our data set we can see with our final Density Plot that not only does one or some of the imputed data results follow the trendline closely, but all do. We can determine that the imputed data, when this close to the trendline, will be fairly accurate. 
+ 
 
-From our data set we can see with our final Density Plot that not only does one or some of the imputed data results follow the trendline closely, but all do. We can determine that the imputed data, when this close to the trendline, will be fairly accurate. 
 
 ### References

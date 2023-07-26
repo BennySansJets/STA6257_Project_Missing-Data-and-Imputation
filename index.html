@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Natalie Belford, Benjamin Brustad, Jasmine Hyler">
-<meta name="dcterms.date" content="2023-07-24">
+<meta name="dcterms.date" content="2023-07-26">
 
 <title>Missing Data and Imputation</title>
 <style>
@@ -119,7 +119,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 24, 2023</p>
+      <p class="date">July 26, 2023</p>
     </div>
   </div>
   
@@ -141,8 +141,8 @@ div.csl-indent {
 <section id="types-of-missing-data" class="level4">
 <h4 class="anchored" data-anchor-id="types-of-missing-data">Types of Missing Data</h4>
 <p>Throughout the topic research, a common theme has emerged. Missing data is categorized into either one of three types: Missing Completely at Random, Missing at Random, and or Missing Not at Random.</p>
-<p>Kang <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">2013</a>)</span> introduces us to the three types of missing data as initially proposed by Rubin <span class="citation" data-cites="r76">(<a href="#ref-r76" role="doc-biblioref">Rubin 1976</a>)</span>. This research was expanded upon <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">Pedersen et al. 2017</a>)</span> to discuss the thorough estimation value of using MI in data analysis along with providing the three-step method. Pedersen et al. <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">2017</a>)</span> conclude the results of using MI are similar to using complete datasets thereby enhancing the credibility of the method’s robustness.</p>
-<p>Missing Completely at Random (MCAR) refers to the probability that missing data is either not related to a specific value that is supposed to be obtained or to the set of obtained values. The data can also be missing due to equipment failure, samples lost in transit, or unsatisfactory samples <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>. MCAR data are unbiased and therefore an advantage due to its estimated parameters being objective and undeterred because of missing data. As a result, MCAR is the best-case option for missing data in an experiment.</p>
+<p>Kang <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">2013</a>)</span> introduces us to the three types of missing data as initially proposed by Rubin <span class="citation" data-cites="r76">(<a href="#ref-r76" role="doc-biblioref">1976</a>)</span>. This research was expanded upon <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">Pedersen et al. 2017</a>)</span> to discuss the thorough estimation value of using MI in data analysis along with providing the three-step method. Pedersen et al. <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">2017</a>)</span> conclude the results of using MI are similar to using complete datasets thereby enhancing the credibility of the method’s robustness.</p>
+<p>Missing Completely at Random (MCAR) refers to the probability that missing data is either not related to a specific value that is supposed to be obtained or related to the set of obtained values. The data can also be missing due to equipment failure, samples lost in transit, or unsatisfactory samples <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>. MCAR data are unbiased and therefore an advantage due to its estimated parameters being objective and undeterred because of missing data. As a result, MCAR is the best-case option for missing data in an experiment.</p>
 <p>Missing at Random (MAR) refers to the probability that missing responses are dependent upon the set of observed responses, but not related to the specific values expected to be obtained given the history of the obtained variable prior to the experiment. This is the most realistic option for missing data. When Missing at Random (MAR) occurs, the missing data is knowable and missingness is predictable, therefore, estimates can be determined; bias can be “recovered” <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>.</p>
 <p>Missing Not at Random (MNAR) refers to any case of missing data that cannot be classified as either Missing Completely at Random or Missing at Random. When Missing Not at Random (MNAR) occurs, no bias is observed, only power is affected resulting in standard error (SE) around the estimates being larger due to reduced sample size. MNAR is the least desirable scenario of missing data. The only way to accurately obtain an unbiased observation of the data is to model the data and use the model to incorporate it into a more complex model to estimate the values <span class="citation" data-cites="k13">(<a href="#ref-k13" role="doc-biblioref">Kang 2013</a>)</span>. When Missing Not at Random (MNAR) occurs, the subjects affect the variables. Subjects do not want to disclose accurate information for fear or shame, and therefore forego providing a data point altogether <span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a>)</span>.</p>
 </section>
@@ -179,7 +179,7 @@ SE=\sqrt{W+B+\frac{B}{m}}  \tag3
 <p>One proposed method which we deem computationally feasible for this project is multiple imputation. The methodology includes performing single imputation with multiple data sets, analyzing and computing the error of each set, and combining the data into a single, final data set <span class="citation" data-cites="ljlmw14">(<a href="#ref-ljlmw14" role="doc-biblioref">Little et al. 2014</a> )</span>.</p>
 <p>Researchers tested their proposed SICE method using four datasets, a sample of 65,000 real health records from hospitals and diagnostic clinics in Bangladesh, and one public dataset each from UCI Machine Learning Repository, Department of Mathematics of ETH Zurich, and Kaggle. The data types assessed were binary, categorical, and numeric. Researchers tested SICE performance against that of 12 existing imputation methods. Binary and numeric data responded better to SICE than the opposing methods. When using SICE, F-measurement resulted in a 20% increase while error reduction resulted in an 11% increase; Both factors showed improvement using SICE compared to the existing imputation methods. There was no significant time difference when running SICE compared to MICE <span class="citation" data-cites="pmckppp17">(<a href="#ref-pmckppp17" role="doc-biblioref">Pedersen et al. 2017</a>)</span>.</p>
 <p>Using Multiple Imputation by Chained Equations (MICE), the multiple imputation is conducted by manipulating the imputed data and comparing it to the regression, repeating the process multiple times, (usually 5-20), to create a single data set. Most modern imputations will create 20-100 data sets. Then each of these data sets will be analyzed and compared, such that the MI estimate of any statistic is the average of the statistic across each imputed set. The variance of each statistic is based on the within-imputation variation and the between-imputation variation <span class="citation" data-cites="awlb21">(<a href="#ref-awlb21" role="doc-biblioref">Austin et al. 2021</a>)</span>. The variable that is to be analyzed must be included in the imputation model, even if there is no missing data, otherwise, it will often be biased towards null.</p>
-<p>For our analysis, we decided to use the R packages for predictive means matching, classification and regression trees, and lasso linear regression, defined below.</p>
+<p>For our analysis, we decided to use the R packages for predictive means matching, classification and regression trees, lasso linear regression, and Random Forest, defined below.</p>
 <section id="equations" class="level3">
 <h3 class="anchored" data-anchor-id="equations">Equations</h3>
 <section id="predictive-means-matching" class="level4">
@@ -303,16 +303,16 @@ SE=\sqrt{W+B+\frac{B}{m}}  \tag3
 <p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     PrvInc Stdzd_Pymt_PC Pymt_PC     
-2685      1             1       1    0
-328       1             1       0    1
-330       1             0       1    1
-761       1             0       0    2
-487       0             1       1    1
-64        0             1       0    2
-62        0             0       1    2
-197       0             0       0    3
-        810          1350    1350 3510</code></pre>
+<pre><code>     PrvInc Pymt_PC Stdzd_Pymt_PC     
+2701      1       1             1    0
+307       1       1             0    1
+307       1       0             1    1
+747       1       0             0    2
+522       0       1             1    1
+61        0       1             0    2
+54        0       0             1    2
+215       0       0             0    3
+        852    1323          1330 3505</code></pre>
 </div>
 </div>
 <p>Additionally, we ran the miss Forest package followed by a summary to gain a better quantitative view. Below are the code, results, and figure.</p>
@@ -336,12 +336,12 @@ SE=\sqrt{W+B+\frac{B}{m}}  \tag3
 <div class="cell-output cell-output-stdout">
 <pre><code>     PrvInc       Stdzd_Pymt_PC      Pymt_PC      
  Min.   :0.0000   Min.   :    0   Min.   :     0  
- 1st Qu.:0.0381   1st Qu.:18704   1st Qu.: 18410  
- Median :0.1097   Median :23271   Median : 22976  
- Mean   :0.1716   Mean   :24081   Mean   : 24068  
- 3rd Qu.:0.2728   3rd Qu.:28184   3rd Qu.: 28247  
- Max.   :0.7588   Max.   :68567   Max.   :100028  
- NA's   :810      NA's   :1350    NA's   :1350    </code></pre>
+ 1st Qu.:0.0383   1st Qu.:18557   1st Qu.: 18389  
+ Median :0.1097   Median :23036   Median : 23051  
+ Mean   :0.1719   Mean   :23996   Mean   : 24036  
+ 3rd Qu.:0.2738   3rd Qu.:28182   3rd Qu.: 28270  
+ Max.   :0.7588   Max.   :89235   Max.   :100028  
+ NA's   :852      NA's   :1330    NA's   :1323    </code></pre>
 </div>
 </div>
 <div class="cell">
