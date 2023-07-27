@@ -16,43 +16,149 @@ execute:
 
 ## Introduction
 
-Missing data is ubiquitous in any dataset. Although alone it is not a problem, missing data becomes a problem when its analysis shows bias or lacks power. While the occurrence of missing data is immense, its discussion in many peer-reviewed journal articles is not so. Even more infrequent are the discussions on how best to accurately institute observations in the missing dataset. Some researchers [@ljlmw14] have observed that, there are areas of loss when it comes to missing data -- bias, power, and recoverability.
+- Missing Data
 
-Missing data in experiments and analyses can lead to inaccurately distributed data and calculations, skewed visuals (such as histograms, line graphs, etc.), and allow for inaccurate conclusions to be rendered. Determining which method is best is another challenge entirely. The problem of missing data in research applications is vast. There is a significant need to best correct the missing data points in order to provide the most accurate and complete dataset from which to analyze the research and draw accurate conclusions. Researchers suggest using the most common form of missing data analysis, Multiple Imputation (MI), in addition to other novel suggested approaches.
+  - Common occurrence among datasets
+    - Not widely discussed how to resolve 
+  - Alone, not a problem
+    - Becomes problem when analysis shows bias or lacks power
+    
+## Issues with Missing Data
 
-MI resolves the issue of "too small or too big" standard errors gathered from using traditional methods of addressing missing data. A large standard error occurs when statistical results are acquired with a lack of precision, whereas a small standard error occurs when statistical results are acquired with an overestimation of precision.
+- Within experiments and analyses, missing data can lead to
 
-As Madley-Dowd et al.[-@mhth19] have noted, providing sufficient auxiliary variables can alleviate power degradation from missing data. They determined that standard error increased when the fraction of missing information (FMI) increased, while FMI decreased when auxiliary variables increased.
+  - Inaccurately distributed data and calculations 
+  - Skewed visuals (histograms, line graphs, etc.)
+  - Inaccurate conclusions rendered
 
-There has also been discussion of using machine learning to address missing data[@emmsmt21]. Using machine learning, additional imputation methods to alleviate missing data include K Nearest Neighbor (KNN) and Support Vector Machine(SVM). KNN measures distances for each missing value and pulls the replacement value from the smallest distances. KNN still performs well even with large amounts of missing data, and in iterative versions, it has been shown to converge faster than many other methods, yet with a high computation time. SVM is similar, but rather than weighting each distance as with KMM, it aims to create a hyperplane that has the largest distance to data points. It should be noted that the KNN method outperformed the experiment's implementation of a random forest decision tree for small missingness ratios.
 
-Many researchers argue that single imputation methods should be used only in randomized trials[@awlb21].
+## Types of Missing Data 
+- Missing data categorized into one of three types:
+  - Missing Completely at Random (MCAR)
+  - Missing at Random (MAR)
+  - Missing Not at Random (MNAR)
+ 
+ 
+## Missing Completely at Random (MCAR)
+- Probability that missing data either 
+  - Not related to specific value supposed to be obtained
+  - Related to set of obtained values
+  - MCAR data is unbiased
+  
+  
+## Missing Completely at Random (MCAR), continued
+- Examples:
+  - Equipment failure
+  - Samples lost in transit 
+  - Unsatisfactory samples
 
-## Types of Missing Data
+  
 
-Throughout the topic research, a common theme has emerged. Missing data is categorized into either one of three types: Missing Completely at Random, Missing at Random, and or Missing Not at Random.
+## Missing at Random (MAR)
+- Probability that missing responses are 
+  - Dependent upon set of observed responses
+  - Not related to specific expected values 
+- Most realistic option for missing data
+- Missing data is knowable, missingness is predictable
+  - Missingness not at random; is random condition on observed values from entire dataset  
+  - Estimates determined
+  - Bias can be "recovered"
+  
+  
+## Missing at Random (MAR), continued
+- Example: Men less likely to fill out depression survey 
+    - Reason: because of society
+       - Not because of lack of depression symptoms 
 
-Kang[-@k13] introduces us to the three types of missing data as initially proposed by Rubin[@r76]. This research was expanded upon [@pmckppp17] to discuss the thorough estimation value of using MI in data analysis along with providing the three-step method. Pedersen et al. conclude the results of using MI are similar to using complete datasets thereby enhancing the credibility of the method's robustness.
 
-Missing Completely at Random (MCAR) refers to the probability that missing data is either not related to a specific value that is supposed to be obtained or to the set of obtained values. The data can also be missing due to equipment failure, samples lost in transit, or unsatisfactory samples[@k13]. MCAR data are unbiased and therefore an advantage due to its estimated parameters being objective and undeterred because of missing data. As a result, MCAR is the best-case option for missing data in an experiment.
+## Missing Not at Random (MNAR)
+- Missing data not classified as either MCAR or MAR
+  - No bias is observed
+  - Power is affected
+    - Larger Standard Error (SE) due to reduced sample size
+  - Least desirable missing data scenario
+- When MNAR occurs, research subjects affect variables
+- Example: Subjects don't disclose accurate information for fear or shame; forego providing data altogether
+  
 
-Missing at Random (MAR) refers to the probability that missing responses are dependent upon the set of observed responses, but not related to the specific values expected to be obtained given the history of the obtained variable prior to the experiment. This is the most realistic option for missing data. When Missing at Random (MAR) occurs, the missing data is knowable and missingness is predictable, therefore, estimates can be determined; bias can be "recovered"[@k13].
 
-Missing Not at Random (MNAR) refers to any case of missing data that cannot be classified as either Missing Completely at Random or Missing at Random. When Missing Not at Random (MNAR) occurs, no bias is observed, only power is affected resulting in standard error (SE) around the estimates being larger due to reduced sample size. MNAR is the least desirable scenario of missing data. The only way to accurately obtain an unbiased observation of the data is to model the data and use the model to incorporate it into a more complex model to estimate the values[@k13]. When Missing Not at Random (MNAR) occurs, the subjects affect the variables. Subjects do not want to disclose accurate information for fear or shame, and therefore forego providing a data point altogether[@ljlmw14].
+## Machine Learning to Resolve Missing Data 
+- Alternate methods to alleviate missing data include:
+  - Support Vector Machine (SVM)
+      - Creates hyperplane that has largest distance to data points
+ 
+    
+## Machine Learning to Resolve Missing Data, continued    
+   - K Nearest Neighbor (KNN)
+    - Measures distances for each missing value, pulls replacement value from smallest distances
+    - Pro:
+       - Performs well with large amount of missing data
+       - Converges faster than other methods (when using iterative versions)
+    - Con: high computation time
+    
+    
 
-## Types of Missing Data Solutions
+## Types of Missing Data Solutions 
+- Missing Imputation (MI)
+- Complete Case Analysis, aka Listwise Analysis
+- Treatment and Reporting of Missing Data in Observational Studies (TARMOS)
+- Full-Information Maximum Likelihood
+- Multivariate Imputation by Chained Equation (MICE)
+- Single Center Imputation from Multiple Chained Equation (SICE)
 
-Kang attempts to provide solutions to fill in the missing data points[@k13]. His research suggests the best solution to missing data is to be proactive to prevent it. When prevention fails to eliminate missing data, Kang offers several data analysis solutions to make the data more robust. The most common solution is complete case analysis, also stated as listwise analysis, with the aim to eliminate the missing data records altogether and analyze only the remaining whole data records.
 
-Meanwhile, Lee et al.[-@ltclbghc21] deem the method beneficial for some use cases, but not sufficient for most analyses. They introduce Treatment and Reporting of Missing data in Observational Studies (TARMOS), a novel framework alternative to MI. TARMOS's aim is to provide transparency and limit redundancies in substituted data. The framework notes the importance of using auxiliary variables to gather information from incomplete observations.
 
-In addition to using MI, Little, et al. recommended using full-information maximum likelihood to mitigate the issues of missing data[@ljlmw14]. Using the three discussed planned missing data designs - multiform questionnaire protocol, two-method planned missing design, and wave-missing longitudinal design -- the user is able to better understand how to overcome missing data issues.
+## Multiple Imputation (MI)
+  - Most common method
+  - Results similar to using complete datasets 
+    - Resolves issue of too small or too large standard errors
+     -   Large standard error (SE) - results acquired lacked precision
+     -   Small standard error (SE) - results acquired with overestimation of precision
 
-It is essential to have quality datasets to avoid corrupted machine learning models. A derivative of MI is the Multivariate Imputation by Chained Equation (MICE) algorithm which assumes data is Missing at Random (MAR). The process uses multiple imputation methods to provide better results by considering the uncertainty of missing data.
 
-Khan and Hoque [-@kh20] provide an alternative to MICE. Known as SICE, the new method improves upon the already existing Multivariate Imputation by Chained Equation (MICE) algorithm (found as a package in R), split into two variations to impute both categorical and numerical data. The method improves missing data by creating a hybrid of single and multiple imputation techniques. Using the respective variant, SICE-Categorical and SICE-Numeric, of the Single Center Imputation from Multiple Chained Equation (SICE) algorithm, the missing data values are corrected using a thorough approach to closely find a more accurate value to use instead. The approach uses predicted values imputed by using the MI approach to compute a mean or mode for the imputed values(depending on the data type), and replacing the original imputed value with the respective central measure. An added feature of using SICE in R is that it often had the lowest computation time for its data sets.
+## Complete Case Analysis
+- aka Listwise Analysis
+  - Not appropriate for all use cases
+  - Purpose: Eliminate missing data records altogether; analyze only remaining whole data records [@k13]
+  
+  
+  
+## Treatment and Reporting of Missing Data in Observational Studies (TARMOS)
+  - Alternative to MI
+  - Purpose: Provide transparency, limit redundancies in substituted data
+    - Requires auxiliary variables to gather information from incomplete observations [-@ltclbghc21]
+    
+    
+## Full-Information Maximum Likelihood   
+- Uses planned missing data designs:
+    - Multiform questionnaire protocol
+    - Two-method planned missing design
+    - Wave-missing longitudinal design 
+  - Purpose: Better understand how to overcome missing data issues [@ljlmw14]
 
-Two main techniques of imputation exist -- traditional and modern[@oap18]. The traditional technique - single imputation, deletion, and mean imputation may be obsolete. However, Hot or Cold deck imputation (replacing missing data using similar data sets), and Regression imputation (replacing missing data with points along a regression) - may prove useful with many datasets. Furthermore, single imputation may lead to biased results and underestimation of error or variability.
+
+## Multivariate Imputation by Chained Equation (MICE)
+- Assumes data is Missing at Random (MAR)
+  - Purpose: Consider uncertainty of missing data by using multiple imputation methods to provide better results
+
+
+## Figure 1: Multiple Imputation Process using 5 sets
+
+![Figure 1: Multiple Imputation Process using 5 sets](MultiImputation.gif)  
+
+
+## Single Center Imputation from Multiple Chained Equation (SICE)
+- Alternative to MICE
+- Improves upon MICE by creating hybrid of single and multiple imputation techniques
+- Uses the respective SICE variant (categorical or numeric)
+  - Missing data values corrected using thorough approach to find more accurate value to use
+  - Uses predicted values imputed from MI approach 
+    - Computes mean or mode for imputed values (depending on data type)
+    - Replaces original imputed value with respective central measure (mean or mode)
+- Has lowest computation time all all missing data solutions
+  - Purpose: Replace predicted imputed values computed using MI with central measure computed using SICE [-@kh20]
+
+
 
 ## Methods
 
