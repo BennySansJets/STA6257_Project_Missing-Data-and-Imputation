@@ -90,7 +90,7 @@ execute:
 -   Most common method
 -   Results similar to using complete datasets
     -   Resolves issue of too small or too large standard errors
-    -   Large standard error (SE) - results acquired lacked precision
+    -   Large standard error (SE) - results acquired lack precision
     -   Small standard error (SE) - results acquired with overestimation of precision
 
 ## Multivariate Imputation by Chained Equation (MICE)
@@ -100,10 +100,6 @@ execute:
 -   Purpose: Consider uncertainty of missing data
 
 -   Uses multiple imputation methods to provide better results
-
-## Figure 1: Multiple Imputation Process using 5 sets
-
-![Figure 1: Multiple Imputation Process using 5 sets](MultiImputation.gif)
 
 ## Single Center Imputation from Multiple Chained Equation (SICE)
 
@@ -129,6 +125,10 @@ execute:
 -   Approach: Imputation using 3 approaches: Predictive Means Matching, Classification and Regression Trees, Lasso Regression, and Random Forest
 
     -   These are all forms of Multiple Imputation: perform single imputation several times to create multiple data sets, analyze and compute the error of each set, then combine the data into a single, final data set [@ljlmw14].
+
+## Figure 1: Multiple Imputation Process using 5 sets
+
+![Figure 1: Multiple Imputation Process using 5 sets](MultiImputation.gif){alt="Figure 1: Multiple Imputation Process using 5 sets"}
 
 ## Rubin's rules for combining {.smaller}
 
@@ -331,7 +331,7 @@ imputed_Data <- mice(Chronic_Conditions.mis, m=5, maxit=50, method = 'pmm', seed
 md.pattern(Chronic_Conditions.mis)
 ```
 
-## Miss Forest 
+## Miss Forest
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
@@ -340,7 +340,7 @@ md.pattern(Chronic_Conditions.mis)
 plot_pattern(Chronic_Conditions.mis)
 ```
 
-## Figure 5: Table of Missing Values - Miss Forest 
+## Figure 5: Table of Missing Values - Miss Forest
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
@@ -349,7 +349,7 @@ plot_pattern(Chronic_Conditions.mis)
 summary(Chronic_Conditions.mis)
 ```
 
-## Figure 6: Density Plot 
+## Figure 6: Density Plot
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
@@ -368,7 +368,7 @@ densityplot(imputed_Data)
 
 -   Multivariate Imputation by Chained Equations(MICE) is an effective way of imputing data
 
-## Conclusion, continued 
+## Conclusion, continued
 
 -   Benefits
 
