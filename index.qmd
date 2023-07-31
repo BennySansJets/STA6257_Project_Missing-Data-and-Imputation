@@ -173,7 +173,6 @@ mice_imputed <- data.frame(
 
 
 
-#head(mice_imputed)
 #Imputation using miss Forest 
 Chronic_Conditions.mis <- prodNA(Chronic_Conditions, noNA = 0.1)
 
