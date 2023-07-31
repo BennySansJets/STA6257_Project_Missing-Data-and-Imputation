@@ -204,9 +204,9 @@ $$
 
 -   Preserves relationships between variables best
 
--   May add bias
-
 -   Removes some predictor variables(easier to use)
+
+-   May add bias and nonsense results
 
 -   Equation [@MZPRG14]
 

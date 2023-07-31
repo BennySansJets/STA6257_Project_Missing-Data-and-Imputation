@@ -19,7 +19,7 @@ Missing data in experiments and analyses can lead to inaccurately distributed da
 
 MI resolves the issue of “too small or too big” standard errors gathered from using traditional methods of addressing missing data. A large standard error occurs when statistical results are acquired with a lack of precision, whereas a small standard error occurs when statistical results are acquired with an overestimation of precision.
 
-As Madley-Dowd et al.[-@mhth19] have noted, providing sufficient auxiliary variables can alleviate power degradation from missing data. They determined that standard error increased when the fraction of missing information (FMI) increased, while FMI decreased when auxiliary variables increased. 
+As Madley-Dowd et al. [-@mhth19] have noted, providing sufficient auxiliary variables can alleviate power degradation from missing data. They determined that standard error increased when the fraction of missing information (FMI) increased, while FMI decreased when auxiliary variables increased. 
 
 There has also been discussion of using machine learning to address missing data [@emmsmt21]. Using machine learning, additional imputation methods to alleviate missing data include K Nearest Neighbor (KNN) and Support Vector Machine(SVM). KNN measures distances for each missing value and pulls the replacement value from the smallest distances. KNN still performs well even with large amounts of missing data, and in iterative versions, it has been shown to converge faster than many other methods, yet with a high computation time. SVM is similar, but rather than weighting each distance as with KMM, it aims to create a hyperplane that has the largest distance to data points. It should be noted that the KNN method outperformed the experiment’s implementation of a random forest decision tree for small missingness ratios.
 
@@ -94,7 +94,7 @@ For our analysis, we decided to use the R packages for predictive means matching
 ### Equations 
 
 #### Predictive Means Matching
-Predictive means matching(PMM) is a hot deck method, which pools complete cases which are similar to the case we are trying to impute, and randomly chooses values from the pool of prospective donors to be imputed for the missing data.For each missing variable, $x$, we impute using parameters $\alpha$ and covariates $z$. We use $h$ as a subscript for data containing $x$ and $j$ for data without. PMM choses a random donor from $x_h$ such that the distance defined below is minimized. 
+Predictive means matching(PMM) is a hot deck method, which pools complete cases which are similar to the case we are trying to impute, and randomly chooses values from the pool of prospective donors to be imputed for the missing data. For each missing variable, $x$, we impute using parameters $\alpha$ and covariates $z$. We use $h$ as a subscript for data containing $x$ and $j$ for data without. PMM choses a random donor from $x_h$ such that the distance defined below is minimized. 
 
 $$
  \delta_{hj}=\alpha^{mis}z_j-\alpha^{obs}z_h \tag{4}
