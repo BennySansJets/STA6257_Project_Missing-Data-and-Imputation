@@ -117,7 +117,7 @@ where Y and X are the outcome and predictors respectively. λ is a non-negative 
 
 ## Analysis and Results
 
-Prior to implementing the MICE method, we ran a missing map to get a count of which rows and columns contain missing data and how many data points are missing. As the following table and figures will show most of the columns contain their complete data set. We do, however, have three columns – Provisional Income, Total Medicare Standardized Payment, and Total Medicare Payment. Provisional Income has 408 missing entries, and both payment columns have missing values in 918 rows each. In our data set we have 2244 missing data points total between these columns.
+Prior to implementing the MICE method, we ran a missing map to get a count of which rows and columns contain missing data and how many data points are missing. As the following table and figures will show most of the columns contain their complete data set. We do, however, have three columns – Provisional Income, Total Medicare Standardized Payment, and Total Medicare Payment - that are missing data. Provisional Income has 408 missing entries, and both payment columns have missing values in 918 rows each. In our data set we have 2244 missing data points total between these columns.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # loading packages 
@@ -159,8 +159,11 @@ aggr_plot <- aggr(Chronic_Conditions, col=c('navyblue','red'),
 ```
 Figure 4:  Histogram  
 
-We can see that over 75% of the data has been recorded but between those columns we are missing roughly 25% of our data which we will utilize the MICE package to impute. 
-Following the Missing Map, we ran the MICE package in R. 
+We can see that over 75% of the data in these three columns have been recorded but we are
+missing the rest, roughly 25%, which we will utilize the MICE package to impute. Additionally, we
+ran the miss Forest package followed by a summary of both to gain a better quantitative view.
+Below are the code, results, and figures.
+
 
 Results:
 ```{r, warning=FALSE, echo=T, message=FALSE}
@@ -188,7 +191,9 @@ Chronic_Conditions.mis <- prodNA(Chronic_Conditions, noNA = 0.1)
  
 
 
-After running the MICE package, we ran a MICE plot to gain a better visual of our missing data. 
+After running the MICE package, we ran a density plot to gain a better visual of our imputed data
+and how it relates to our original data.
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
 # Plots missing data percentages per variable 
@@ -240,8 +245,18 @@ Figure 7: Density Plot with original data distribution in Blue and each red line
 ## Conclusion
 
 
-Missing data is a common finding when analyzing datasets, yet can be easily addressed. Unlike other data analysis cleaning methods which create biased results by removing data or imputing an average, Multiple imputation is the act of completing data sets where there are missing data points. MI’s purpose is to utilize multiple analyses for what the missing data value could be, then combine analyses results in order to have a less biased and more accurate outcome. Multivariate Imputation by Chained Equations, or MICE, in R is a highly effective way to impute missing data into data sets. One key benefit of using MI, or more specifically MICE, is to reduce uncertainty by using multiple possible outcomes for each data point. Within the MICE package are PMM, Lasso and Cart methods if imputation. Each method will produce results based off of a different type of analysis which will include both a combination of the different analysis types and a combination of each imputation.  
-
-From our data set we can see with our final Density Plot that not only does one or some of the imputed data results follow the trendline closely, but all do. We can determine that the imputed data, when this close to the trendline, will be fairly accurate. 
+Missing data is a common finding when analyzing datasets, yet can be easily addressed. Unlike
+other data analysis cleaning methods which create biased results by removing data or imputing an
+average, Multiple Imputation(MI) is the act of completing data sets where there are missing data
+points. MI’s purpose is to utilize multiple analyses for what the missing data value could be, then
+combine analyses results in order to have a less biased and more accurate outcome. Multivariate
+Imputation by Chained Equations, or MICE, in R is a highly effective way to impute missing data into
+data sets. One key benefit of using MI, or more specifically MICE, is to reduce uncertainty by using
+multiple possible outcomes for each data point. Within the MICE package are PMM, Lasso and Cart
+methods of imputation. Each method will produce results based off of a different type of analysis
+which will include both a combination of the different analysis types and a combination of each
+imputation. From our data set we can see with our final Density Plot that not only does one or some
+of the imputed data results follow the trendline closely, but all do. We can determine that the
+imputed data, when this close to the trendline, will be fairly accurate.
 
 ### References
